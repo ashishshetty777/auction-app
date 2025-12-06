@@ -108,7 +108,7 @@ export default function Home() {
                     <li>Chhava Sena</li>
                     <li>Team Lagaan</li>
                     <li>Pratham 11</li>
-                    <li>Yohan's Warriors</li>
+                    <li>Yohan&apos;s Warriors</li>
                     <li>Khalsa Warriors</li>
                     <li>Shree Siddhivinayak Strikers</li>
                   </ul>
