@@ -43,13 +43,15 @@ export function AuctionProvider({ children }: { children: React.ReactNode }) {
 
     try {
       setLoading(true);
-      const [playersRes, teamsRes] = await Promise.all([
+      const [playersRes, teamsRes, lastSaleRes] = await Promise.all([
         fetch('/api/players'),
         fetch('/api/teams'),
+        fetch('/api/last-sale'),
       ]);
 
       const playersData = await playersRes.json();
       const teamsData = await teamsRes.json();
+      const lastSaleData = await lastSaleRes.json();
 
       if (playersData.success) {
         setPlayers(playersData.data);
@@ -57,6 +59,10 @@ export function AuctionProvider({ children }: { children: React.ReactNode }) {
 
       if (teamsData.success) {
         setTeams(teamsData.data);
+      }
+
+      if (lastSaleData.success && lastSaleData.data) {
+        setLastSale(lastSaleData.data);
       }
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -273,13 +279,24 @@ export function AuctionProvider({ children }: { children: React.ReactNode }) {
       const teamData = await teamRes.json();
       if (!teamData.success) return false;
 
-      // Store the sale for potential undo
-      setLastSale({
+      // Store the sale for potential undo in database
+      const saleData = {
         playerId,
         teamId,
         amount,
         timestamp: Date.now(),
+      };
+
+      const lastSaleRes = await fetch('/api/last-sale', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(saleData),
       });
+
+      const lastSaleResult = await lastSaleRes.json();
+      if (lastSaleResult.success) {
+        setLastSale(saleData);
+      }
 
       // Update local state
       setPlayers(players.map(p => (p.id === playerId ? updatedPlayer : p)));
@@ -355,6 +372,11 @@ export function AuctionProvider({ children }: { children: React.ReactNode }) {
       );
 
       setTeams(teams.map(t => (t.id === lastSale.teamId ? updatedTeam : t)));
+
+      // Delete last sale from database
+      await fetch('/api/last-sale', {
+        method: 'DELETE',
+      });
 
       setLastSale(null);
       return true;

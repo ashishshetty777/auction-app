@@ -34,7 +34,6 @@ export default function PlayersPage() {
   const [filterCategory, setFilterCategory] = useState<PlayerCategory | 'ALL'>(
     'ALL',
   );
-  console.log(players, 'mijiji');
   const [newPlayer, setNewPlayer] = useState({
     name: '',
     mobileNumber: '',

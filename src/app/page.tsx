@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -10,9 +11,39 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Trophy, Users, Gavel } from 'lucide-react';
+import { Trophy, Users, Gavel, RotateCcw } from 'lucide-react';
 
 export default function Home() {
+  const [isResetting, setIsResetting] = useState(false);
+
+  const handleReset = async () => {
+    const confirmed = window.confirm(
+      'Are you sure you want to reset all data? This will delete all players and teams and restore the initial seeded data. This action cannot be undone.'
+    );
+
+    if (!confirmed) return;
+
+    try {
+      setIsResetting(true);
+      const response = await fetch('/api/seed', {
+        method: 'POST',
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert('Database reset successfully! All data has been restored to the initial state.');
+        window.location.reload();
+      } else {
+        alert('Failed to reset database. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error resetting database:', error);
+      alert('Error resetting database. Please try again.');
+    } finally {
+      setIsResetting(false);
+    }
+  };
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       <div className="container mx-auto px-4 py-4">
@@ -137,6 +168,17 @@ export default function Home() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Reset Button - Fixed at bottom right */}
+        <Button
+          onClick={handleReset}
+          disabled={isResetting}
+          className="fixed bottom-8 right-8 bg-red-600 hover:bg-red-700 text-white shadow-lg"
+          size="lg"
+        >
+          <RotateCcw className="w-4 h-4 mr-2" />
+          {isResetting ? 'Resetting...' : 'Reset Database'}
+        </Button>
       </div>
     </div>
   );

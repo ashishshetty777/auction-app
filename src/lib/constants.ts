@@ -47,10 +47,26 @@ export const CATEGORY_BG_COLORS: Record<string, string> = {
   BRONZE: "bg-orange-500",
 };
 
+export const CATEGORY_BG_COLORS_HEX: Record<string, string> = {
+  LEGEND: "#a855f7",
+  YOUNGSTAR: "#22c55e",
+  GOLD: "#fbbf24",
+  SILVER: "#9ca3af",
+  BRONZE: "#f97316",
+};
+
 export const CATEGORY_TEXT_COLORS: Record<string, string> = {
   LEGEND: "text-white",
   YOUNGSTAR: "text-white",
   GOLD: "text-gray-900",
   SILVER: "text-white",
   BRONZE: "text-white",
+};
+
+export const CATEGORY_TEXT_COLORS_HEX: Record<string, string> = {
+  LEGEND: "#ffffff",
+  YOUNGSTAR: "#ffffff",
+  GOLD: "#111827",
+  SILVER: "#ffffff",
+  BRONZE: "#ffffff",
 };
