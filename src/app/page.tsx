@@ -1,17 +1,70 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Trophy, Users, Gavel } from "lucide-react";
+import { useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Trophy, Users, Gavel, RotateCcw } from 'lucide-react';
 
 export default function Home() {
+  const [isResetting, setIsResetting] = useState(false);
+
+  const handleReset = async () => {
+    const confirmed = window.confirm(
+      'Are you sure you want to reset all data? This will delete all players and teams and restore the initial seeded data. This action cannot be undone.'
+    );
+
+    if (!confirmed) return;
+
+    try {
+      setIsResetting(true);
+      const response = await fetch('/api/seed', {
+        method: 'POST',
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert('Database reset successfully! All data has been restored to the initial state.');
+        window.location.reload();
+      } else {
+        alert('Failed to reset database. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error resetting database:', error);
+      alert('Error resetting database. Please try again.');
+    } finally {
+      setIsResetting(false);
+    }
+  };
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex flex-col items-end gap-1">
+          <span className="text-xs text-gray-500">Powered by</span>
+          <Image
+            src="/images/iotric.webp"
+            alt="iotric"
+            width={120}
+            height={40}
+          />
+        </div>
         <div className="text-center mb-12">
           <div className="flex items-center justify-center mb-6">
-            <Trophy className="w-20 h-20 text-yellow-500" />
+            {/* <Trophy className="w-20 h-20 text-yellow-500" /> */}
+            <Image
+              src="/images/logo.jpg"
+              alt="iotric"
+              width={240}
+              height={80}
+            />
           </div>
           <h1 className="text-5xl font-bold text-gray-900 mb-4">
             SCL-2026 Auction
@@ -29,15 +82,14 @@ export default function Home() {
                   <Users className="w-10 h-10 text-blue-500" />
                   <div>
                     <CardTitle>Players</CardTitle>
-                    <CardDescription>
-                      Manage player database
-                    </CardDescription>
+                    <CardDescription>Manage player database</CardDescription>
                   </div>
                 </div>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-gray-600">
-                  View, add, and manage players across all categories: Legend, Youngstar, Gold, Silver, and Bronze.
+                  View, add, and manage players across all categories: Legend,
+                  Youngstar, Gold, Silver, and Bronze.
                 </p>
                 <Button className="mt-4 w-full">View Players</Button>
               </CardContent>
@@ -51,15 +103,14 @@ export default function Home() {
                   <Gavel className="w-10 h-10 text-green-500" />
                   <div>
                     <CardTitle>Team Auction</CardTitle>
-                    <CardDescription>
-                      Manage team auctions
-                    </CardDescription>
+                    <CardDescription>Manage team auctions</CardDescription>
                   </div>
                 </div>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-gray-600">
-                  Conduct auctions, assign players to teams, and track team budgets and category limits.
+                  Conduct auctions, assign players to teams, and track team
+                  budgets and category limits.
                 </p>
                 <Button className="mt-4 w-full">Start Auction</Button>
               </CardContent>
@@ -88,9 +139,9 @@ export default function Home() {
                   <ul className="space-y-1 text-gray-600">
                     <li>Legend: 1 player</li>
                     <li>Youngstar: 1 player</li>
-                    <li>Gold: Max 2 players</li>
-                    <li>Silver: Max 5 players</li>
-                    <li>Bronze: Min 4 players</li>
+                    <li>Gold: 2 players (required)</li>
+                    <li>Silver: 5 players (required)</li>
+                    <li>Bronze: 4 players (required)</li>
                   </ul>
                 </div>
                 <div>
@@ -117,6 +168,17 @@ export default function Home() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Reset Button - Fixed at bottom right */}
+        <Button
+          onClick={handleReset}
+          disabled={isResetting}
+          className="fixed bottom-8 right-8 bg-red-600 hover:bg-red-700 text-white shadow-lg"
+          size="lg"
+        >
+          <RotateCcw className="w-4 h-4 mr-2" />
+          {isResetting ? 'Resetting...' : 'Reset Database'}
+        </Button>
       </div>
     </div>
   );
