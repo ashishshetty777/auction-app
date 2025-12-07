@@ -57,3 +57,10 @@ export interface CurrentAuction {
   currentBid: number;
   biddingTeamId: string | null;
 }
+
+export interface LastSale {
+  playerId: string;
+  teamId: string;
+  amount: number;
+  timestamp: number;
+}

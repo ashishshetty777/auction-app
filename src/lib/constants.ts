@@ -8,9 +8,9 @@ export const AUCTION_RULES: AuctionRules = {
   categoryLimits: {
     LEGEND: { min: 1, max: 1 },
     YOUNGSTAR: { min: 1, max: 1 },
-    GOLD: { min: 2, max: 2 },
-    SILVER: { min: 5, max: 5 },
-    BRONZE: { min: 4, max: 13 - 1 - 1 - 2 - 5 }, // Remaining slots
+    GOLD: { min: 2, max: 2 }, // Required: exactly 2
+    SILVER: { min: 5, max: 5 }, // Required: exactly 5
+    BRONZE: { min: 4, max: 13 - 1 - 1 - 2 - 5 }, // Min 4, max 4 (13-1-1-2-5=4)
   },
   minBidAmount: {
     LEGEND: 500000, // 5 lakh
@@ -37,4 +37,20 @@ export const CATEGORY_COLORS: Record<string, string> = {
   GOLD: "bg-yellow-100 text-yellow-800 border-yellow-300",
   SILVER: "bg-gray-100 text-gray-800 border-gray-300",
   BRONZE: "bg-orange-100 text-orange-800 border-orange-300",
+};
+
+export const CATEGORY_BG_COLORS: Record<string, string> = {
+  LEGEND: "bg-purple-500",
+  YOUNGSTAR: "bg-green-500",
+  GOLD: "bg-yellow-400",
+  SILVER: "bg-gray-400",
+  BRONZE: "bg-orange-500",
+};
+
+export const CATEGORY_TEXT_COLORS: Record<string, string> = {
+  LEGEND: "text-white",
+  YOUNGSTAR: "text-white",
+  GOLD: "text-gray-900",
+  SILVER: "text-white",
+  BRONZE: "text-white",
 };

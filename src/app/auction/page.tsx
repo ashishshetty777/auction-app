@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useAuction } from "@/lib/auction-context";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,11 +10,11 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { CATEGORY_COLORS, AUCTION_RULES } from "@/lib/constants";
-import { ArrowLeft, Gavel, Plus, AlertCircle } from "lucide-react";
+import { CATEGORY_COLORS, CATEGORY_BG_COLORS, CATEGORY_TEXT_COLORS, AUCTION_RULES } from "@/lib/constants";
+import { ArrowLeft, Gavel, AlertCircle, Undo2 } from "lucide-react";
 
 export default function AuctionPage() {
-  const { players, teams, currentAuction, setCurrentAuctionPlayer, addPlayerToTeam, getMaxBid } = useAuction();
+  const { players, teams, currentAuction, setCurrentAuctionPlayer, addPlayerToTeam, getMaxBid, lastSale, reverseLastSale } = useAuction();
   const [showSoldDialog, setShowSoldDialog] = useState(false);
   const [selectedTeamId, setSelectedTeamId] = useState("");
   const [bidAmount, setBidAmount] = useState("");
@@ -42,6 +43,20 @@ export default function AuctionPage() {
     }
   };
 
+  const handleReverseLastSale = () => {
+    if (!lastSale) return;
+
+    const player = players.find(p => p.id === lastSale.playerId);
+    const confirm = window.confirm(
+      `Reverse the sale of ${player?.name} for ${formatCurrency(lastSale.amount)}?`
+    );
+
+    if (confirm) {
+      const success = reverseLastSale();
+      alert(success ? "Sale reversed successfully!" : "Failed to reverse sale.");
+    }
+  };
+
   const formatCurrency = (amount: number) => {
     const crores = amount / 10000000;
     const lakhs = amount / 100000;
@@ -51,16 +66,58 @@ export default function AuctionPage() {
     return `₹${lakhs.toFixed(1)}L`;
   };
 
+  // Define row category structure
+  const getRowCategory = (rowIndex: number) => {
+    if (rowIndex < 2) return "GOLD";        // Rows 0-1: Gold (2)
+    if (rowIndex < 7) return "SILVER";      // Rows 2-6: Silver (5)
+    if (rowIndex < 11) return "BRONZE";     // Rows 7-10: Bronze (4)
+    return rowIndex === 11 ? "LEGEND" : "YOUNGSTAR"; // Rows 11-12: Legend/Youngstar
+  };
+
+  const getRowBgColor = (rowIndex: number) => {
+    const category = getRowCategory(rowIndex);
+    return CATEGORY_BG_COLORS[category];
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-6">
-          <Link href="/">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Home
-            </Button>
-          </Link>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+      <div className="container mx-auto px-4 py-8 max-w-[1800px]">
+        <div className="mb-6 flex justify-between items-center">
+          <div className="flex items-center gap-4">
+            <Link href="/">
+              <Button variant="ghost" size="sm">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Home
+              </Button>
+            </Link>
+            {lastSale && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleReverseLastSale}
+                className="border-orange-500 text-orange-700 hover:bg-orange-50"
+              >
+                <Undo2 className="w-4 h-4 mr-2" />
+                Undo Last Sale
+              </Button>
+            )}
+            <Image
+              src="/images/logo.jpg"
+              alt="SCL 2026"
+              width={80}
+              height={27}
+              className="object-contain"
+            />
+          </div>
+          <div className="flex flex-col items-end gap-1">
+            <span className="text-xs text-gray-500">Powered by</span>
+            <Image
+              src="/images/iotric.webp"
+              alt="iotric"
+              width={120}
+              height={40}
+            />
+          </div>
         </div>
 
         <div className="mb-6">
@@ -68,8 +125,9 @@ export default function AuctionPage() {
           <p className="text-gray-600 mt-1">Manage team compositions and conduct auctions</p>
         </div>
 
+        {/* Current Player Selection - Restored informative version */}
         <div className="grid lg:grid-cols-3 gap-6 mb-6">
-          <Card className="lg:col-span-2">
+          <Card className="lg:col-span-2 bg-white/80 backdrop-blur">
             <CardHeader>
               <CardTitle>Current Player in Auction</CardTitle>
               <CardDescription>Select a player to start the auction</CardDescription>
@@ -142,7 +200,7 @@ export default function AuctionPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-white/80 backdrop-blur">
             <CardHeader>
               <CardTitle>Auction Stats</CardTitle>
             </CardHeader>
@@ -181,81 +239,153 @@ export default function AuctionPage() {
           </Card>
         </div>
 
-        <div className="space-y-6">
-          <h2 className="text-2xl font-bold">Teams</h2>
+        {/* Teams Grid - 7 Columns with aligned rows */}
+        <div className="hidden lg:grid lg:grid-cols-7 gap-3 mb-6">
+          {teams.map((team) => {
+            const slots = Array.from({ length: 13 }, (_, i) => i);
+
+            return (
+              <div key={team.id} className="flex flex-col gap-2">
+                {/* Team Header - Flat color */}
+                <div className="bg-blue-600 text-white rounded-lg p-3 shadow-lg">
+                  <h3 className="font-bold text-sm text-center mb-2 leading-tight h-8 flex items-center justify-center">{team.name}</h3>
+                  <div className="text-xs space-y-1">
+                    <div className="flex justify-between">
+                      <span>Players:</span>
+                      <span className="font-semibold">{team.players.length}/13</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Purse:</span>
+                      <span className="font-semibold">{formatCurrency(team.remainingPurse)}</span>
+                    </div>
+                    {currentPlayer && (
+                      <div className="flex justify-between pt-1 border-t border-white/20">
+                        <span>Max Bid:</span>
+                        <span className="font-semibold text-yellow-300">
+                          {getMaxBid(team.id, currentPlayer.category) > 0
+                            ? formatCurrency(getMaxBid(team.id, currentPlayer.category))
+                            : "-"}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Player Slots - Aligned rows with category backgrounds */}
+                <div className="space-y-1">
+                  {slots.map((slotIndex) => {
+                    const rowCategory = getRowCategory(slotIndex);
+                    const rowBgColor = getRowBgColor(slotIndex);
+                    const player = team.players[slotIndex];
+
+                    if (player) {
+                      return (
+                        <div
+                          key={slotIndex}
+                          className={`${rowBgColor} ${CATEGORY_TEXT_COLORS[rowCategory]} rounded p-2 shadow-sm h-16 flex flex-col justify-center`}
+                        >
+                          <div className="text-xs font-semibold truncate">{player.name}</div>
+                          <div className="text-xs opacity-90">{formatCurrency(player.soldAmount || 0)}</div>
+                        </div>
+                      );
+                    } else {
+                      return (
+                        <div
+                          key={slotIndex}
+                          className={`${rowBgColor} ${CATEGORY_TEXT_COLORS[rowCategory]} opacity-30 rounded p-2 text-center border-2 border-dashed border-white h-16 flex items-center justify-center`}
+                        >
+                          <div className="text-xs font-semibold">{slotIndex + 1}</div>
+                        </div>
+                      );
+                    }
+                  })}
+                </div>
+
+                {/* Category Status */}
+                <div className="bg-white/80 backdrop-blur rounded-lg p-2 text-xs">
+                  <div className="grid grid-cols-5 gap-1">
+                    {(Object.keys(team.categoryCount) as Array<keyof typeof team.categoryCount>).map((cat) => {
+                      const count = team.categoryCount[cat];
+                      const limit = AUCTION_RULES.categoryLimits[cat];
+                      const initial = cat[0];
+
+                      return (
+                        <div key={cat} className={`${CATEGORY_BG_COLORS[cat]} ${CATEGORY_TEXT_COLORS[cat]} rounded text-center py-1 font-bold`}>
+                          {initial}{count}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Mobile/Tablet View - Stacked Cards */}
+        <div className="lg:hidden space-y-6">
           {teams.map((team) => (
-            <Card key={team.id}>
-              <CardHeader>
+            <Card key={team.id} className="bg-white/80 backdrop-blur">
+              <CardHeader className="bg-blue-600 text-white rounded-t-lg">
                 <div className="flex justify-between items-start">
                   <div>
-                    <CardTitle>{team.name}</CardTitle>
-                    <CardDescription>
-                      {team.players.length} players | Remaining Purse: {formatCurrency(team.remainingPurse)}
+                    <CardTitle className="text-lg">{team.name}</CardTitle>
+                    <CardDescription className="text-white/90 text-sm">
+                      {team.players.length} players | {formatCurrency(team.remainingPurse)}
                     </CardDescription>
                   </div>
                   <div className="text-right text-sm">
-                    <div className="font-semibold text-lg">{team.players.length}/{AUCTION_RULES.maxPlayers}</div>
-                    <div className="text-gray-500">Players</div>
+                    <div className="font-semibold text-2xl">{team.players.length}/13</div>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-4">
+                {/* Category Status */}
                 <div className="mb-4">
-                  <h4 className="text-sm font-semibold mb-2">Category Status</h4>
                   <div className="grid grid-cols-5 gap-2">
                     {(Object.keys(team.categoryCount) as Array<keyof typeof team.categoryCount>).map((cat) => {
                       const count = team.categoryCount[cat];
                       const limit = AUCTION_RULES.categoryLimits[cat];
-                      const isComplete = count >= limit.min;
-                      const isMax = count >= limit.max;
 
                       return (
-                        <div key={cat} className="text-center p-2 border rounded">
-                          <div className="text-xs font-medium">{cat}</div>
-                          <div className={`text-lg font-bold ${isMax ? 'text-red-600' : isComplete ? 'text-green-600' : 'text-gray-600'}`}>
+                        <div key={cat} className="text-center">
+                          <div className={`${CATEGORY_BG_COLORS[cat]} ${CATEGORY_TEXT_COLORS[cat]} rounded p-2 font-bold`}>
                             {count}/{limit.max}
                           </div>
+                          <div className="text-xs text-gray-600 mt-1">{cat}</div>
                         </div>
                       );
                     })}
                   </div>
                 </div>
 
+                {/* Players */}
                 {team.players.length > 0 ? (
                   <div className="space-y-2">
-                    <h4 className="text-sm font-semibold">Players</h4>
-                    <div className="grid gap-2">
-                      {team.players.map((player) => (
-                        <div key={player.id} className="flex justify-between items-center p-3 bg-gray-50 rounded">
-                          <div className="flex items-center gap-3">
-                            <Badge className={CATEGORY_COLORS[player.category]}>
-                              {player.category}
-                            </Badge>
-                            <div>
-                              <div className="font-medium">{player.name}</div>
-                              <div className="text-xs text-gray-600">{player.playingRole}</div>
-                            </div>
-                          </div>
-                          <div className="text-right">
-                            <div className="font-semibold text-green-600">
-                              {player.soldAmount ? formatCurrency(player.soldAmount) : "-"}
-                            </div>
-                          </div>
+                    {team.players.map((player, idx) => (
+                      <div
+                        key={player.id}
+                        className={`${CATEGORY_BG_COLORS[player.category]} ${CATEGORY_TEXT_COLORS[player.category]} rounded p-3 flex justify-between items-center`}
+                      >
+                        <div>
+                          <div className="font-semibold">{idx + 1}. {player.name}</div>
+                          <div className="text-sm opacity-90">{player.playingRole}</div>
                         </div>
-                      ))}
-                    </div>
+                        <div className="text-right">
+                          <div className="font-bold">{formatCurrency(player.soldAmount || 0)}</div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 ) : (
-                  <div className="text-center py-6 text-gray-500">
-                    No players yet
-                  </div>
+                  <div className="text-center py-6 text-gray-500">No players yet</div>
                 )}
 
                 {team.players.length < AUCTION_RULES.minPlayers && (
                   <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded flex items-start gap-2">
-                    <AlertCircle className="w-4 h-4 text-yellow-600 mt-0.5" />
+                    <AlertCircle className="w-4 h-4 text-yellow-600 mt-0.5 flex-shrink-0" />
                     <div className="text-sm text-yellow-800">
-                      Need at least {AUCTION_RULES.minPlayers - team.players.length} more player(s) to meet minimum requirement
+                      Need {AUCTION_RULES.minPlayers - team.players.length} more player(s)
                     </div>
                   </div>
                 )}
@@ -265,6 +395,7 @@ export default function AuctionPage() {
         </div>
       </div>
 
+      {/* Sold Dialog */}
       <Dialog open={showSoldDialog} onOpenChange={setShowSoldDialog}>
         <DialogContent onClose={() => setShowSoldDialog(false)}>
           <DialogHeader>
@@ -304,7 +435,7 @@ export default function AuctionPage() {
                 min={currentPlayer ? AUCTION_RULES.minBidAmount[currentPlayer.category] / 100000 : 0}
               />
               {currentPlayer && selectedTeamId && (
-                <div className="mt-2 text-sm">
+                <div className="mt-2 text-sm space-y-1">
                   <div className="text-gray-600">
                     Min bid: {formatCurrency(AUCTION_RULES.minBidAmount[currentPlayer.category])}
                   </div>

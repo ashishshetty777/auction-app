@@ -32,12 +32,12 @@ A comprehensive cricket player auction management system built with Next.js, Typ
 - **Team Purse**: 2 Crores (₹20,000,000)
 - **Players per Team**: Min 11, Max 13
 
-### Category Limits
+### Category Limits (Required/Max)
 - **Legend**: 1 player (required)
 - **Youngstar**: 1 player (required)
-- **Gold**: Max 2 players (required: 2)
-- **Silver**: Max 5 players (required: 5)
-- **Bronze**: Min 4 players
+- **Gold**: 2 players (required minimum and maximum)
+- **Silver**: 5 players (required minimum and maximum)
+- **Bronze**: 4 players (required minimum and maximum to reach 13 total)
 
 ### Minimum Bid Amounts
 - **Gold**: ₹15 Lakhs
@@ -129,9 +129,10 @@ src/
 ### Smart Bid Calculation
 The app automatically calculates the maximum bid each team can make for a player based on:
 - Remaining team purse
-- Category limits (max players in each category)
-- Total player count limits
-- Minimum budget needed to complete the team
+- Category limits (required minimums: 2 Gold, 4 Silver, 1 Legend, 1 Youngstar, 4 Bronze)
+- Total player count limits (11-13 players)
+- Minimum budget needed to fulfill all category requirements
+- Reserve budget for remaining mandatory players
 
 ### Category Management
 - Real-time tracking of category counts per team
@@ -153,3 +154,13 @@ The app automatically calculates the maximum bid each team can make for a player
 - **Icons**: Lucide React
 - **State Management**: React Context API
 - **Data Persistence**: Browser localStorage
+
+## Undo Functionality
+
+The auction screen provides an "Undo Last Sale" button that:
+- Only appears when a sale can be undone
+- Reverses the most recent player assignment
+- Restores team purse and category counts
+- Clears on page refresh for safety
+- Requires confirmation before executing
+- Helps correct accidental sales during live auctions
