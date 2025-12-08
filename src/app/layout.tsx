@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { AuctionProvider } from "@/lib/auction-context";
+import { EditAuthProvider } from "@/providers/EditAuthProvider";
+import { EditAccessControl } from "@/components/EditAccessControl";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +20,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AuctionProvider>{children}</AuctionProvider>
+        <AuctionProvider>
+          <EditAuthProvider>
+            {children}
+            <EditAccessControl />
+          </EditAuthProvider>
+        </AuctionProvider>
       </body>
     </html>
   );

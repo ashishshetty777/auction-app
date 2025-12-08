@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuction } from '@/lib/auction-context';
+import { useEditAuth } from '@/providers/EditAuthProvider';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -29,6 +30,7 @@ import { ArrowLeft, Plus, Trash2, Search } from 'lucide-react';
 
 export default function PlayersPage() {
   const { players, addPlayer, removePlayer } = useAuction();
+  const { isEditable } = useEditAuth();
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState<PlayerCategory | 'ALL'>(
@@ -123,10 +125,12 @@ export default function PlayersPage() {
               Sold: {soldPlayers.length}
             </p>
           </div>
-          <Button onClick={() => setShowAddDialog(true)}>
-            <Plus className="w-4 h-4 mr-2" />
-            Add Player
-          </Button>
+          {isEditable && (
+            <Button onClick={() => setShowAddDialog(true)}>
+              <Plus className="w-4 h-4 mr-2" />
+              Add Player
+            </Button>
+          )}
         </div>
 
         <Card className="mb-6">
@@ -197,7 +201,7 @@ export default function PlayersPage() {
                       </div>
                     )}
                   </div>
-                  {!player.teamId && (
+                  {(!player.teamId && isEditable) && (
                     <Button
                       variant="destructive"
                       size="sm"

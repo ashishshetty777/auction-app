@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuction } from '@/lib/auction-context';
+import { useEditAuth } from '@/providers/EditAuthProvider';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -47,6 +48,7 @@ export default function AuctionPage() {
   const [showSoldDialog, setShowSoldDialog] = useState(false);
   const [selectedTeamId, setSelectedTeamId] = useState('');
   const [bidAmount, setBidAmount] = useState('');
+  const { isEditable } = useEditAuth();
 
   const availablePlayers = players.filter(p => !p.teamId);
   const sold = players.filter(p => p.teamId);
@@ -164,16 +166,18 @@ export default function AuctionPage() {
                 Back to Home
               </Button>
             </Link>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleReverseLastSale}
-              disabled={!lastSale}
-              className="border-orange-500 text-orange-700 hover:bg-orange-50 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Undo2 className="w-4 h-4 mr-2" />
-              Undo Last Sale
-            </Button>
+            {isEditable && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleReverseLastSale}
+                disabled={!lastSale}
+                className="border-orange-500 text-orange-700 hover:bg-orange-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Undo2 className="w-4 h-4 mr-2" />
+                Undo Last Sale
+              </Button>
+            )}
             <Image
               src="/images/logo.jpg"
               alt="SCL 2026"
@@ -235,10 +239,12 @@ export default function AuctionPage() {
                         </div>
                       </div>
                     </div>
-                    <Button onClick={() => setShowSoldDialog(true)} size="lg">
-                      <Gavel className="w-4 h-4 mr-2" />
-                      Mark as Sold
-                    </Button>
+                    {isEditable && (
+                      <Button onClick={() => setShowSoldDialog(true)} size="lg">
+                        <Gavel className="w-4 h-4 mr-2" />
+                        Mark as Sold
+                      </Button>
+                    )}
                   </div>
 
                   <div className="border rounded-lg p-4">
