@@ -3,7 +3,7 @@ import { AuctionRules } from "@/types";
 export const AUCTION_RULES: AuctionRules = {
   totalTeams: 7,
   teamPurse: 20000000, // 2 crore in rupees
-  minPlayers: 11,
+  minPlayers: 13,
   maxPlayers: 13,
   categoryLimits: {
     LEGEND: { min: 1, max: 1 },

@@ -14,6 +14,7 @@ export interface Player {
   category: PlayerCategory;
   teamId?: string;
   soldAmount?: number;
+  imageUrl?: string;
 }
 
 export interface Team {

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
+import { useEditAuth } from '@/providers/EditAuthProvider';
 import {
   Card,
   CardContent,
@@ -14,6 +15,7 @@ import {
 import { Trophy, Users, Gavel, RotateCcw } from 'lucide-react';
 
 export default function Home() {
+  const { isEditable } = useEditAuth();
   const [isResetting, setIsResetting] = useState(false);
 
   const handleReset = async () => {
@@ -130,7 +132,7 @@ export default function Home() {
                   <ul className="space-y-1 text-gray-600">
                     <li>Total Teams: 7</li>
                     <li>Team Purse: 2 Crores</li>
-                    <li>Min Players: 11</li>
+                    <li>Min Players: 13</li>
                     <li>Max Players: 13</li>
                   </ul>
                 </div>
@@ -170,15 +172,18 @@ export default function Home() {
         </div>
 
         {/* Reset Button - Fixed at bottom right */}
-        <Button
-          onClick={handleReset}
-          disabled={isResetting}
-          className="fixed bottom-8 right-8 bg-red-600 hover:bg-red-700 text-white shadow-lg"
-          size="lg"
-        >
-          <RotateCcw className="w-4 h-4 mr-2" />
-          {isResetting ? 'Resetting...' : 'Reset Database'}
-        </Button>
+        {/* Reset Button - Fixed at bottom right */}
+        {isEditable && (
+          <Button
+            onClick={handleReset}
+            disabled={isResetting}
+            className="fixed bottom-24 right-8 bg-red-600 hover:bg-red-700 text-white shadow-lg"
+            size="lg"
+          >
+            <RotateCcw className="w-4 h-4 mr-2" />
+            {isResetting ? 'Resetting...' : 'Reset Database'}
+          </Button>
+        )}
       </div>
     </div>
   );
