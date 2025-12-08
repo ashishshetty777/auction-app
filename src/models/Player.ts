@@ -14,6 +14,7 @@ const PlayerSchema = new Schema<PlayerType>(
     category: { type: String, required: true, enum: ['LEGEND', 'YOUNGSTAR', 'GOLD', 'SILVER', 'BRONZE'] },
     teamId: { type: String },
     soldAmount: { type: Number },
+    imageUrl: { type: String },
   },
   {
     timestamps: true,

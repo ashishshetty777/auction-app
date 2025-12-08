@@ -216,31 +216,47 @@ export default function AuctionPage() {
             <CardContent>
               {currentPlayer ? (
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
-                    <div>
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-xl font-semibold">
-                          {currentPlayer.name}
-                        </h3>
-                        <Badge
-                          className={CATEGORY_COLORS[currentPlayer.category]}
-                        >
-                          {currentPlayer.category}
-                        </Badge>
-                      </div>
-                      <div className="text-sm text-gray-600 space-y-1">
-                        <div>Role: {currentPlayer.playingRole}</div>
-                        <div>Age: {currentPlayer.age}</div>
-                        <div>
-                          Base Price:{' '}
-                          {formatCurrency(
-                            AUCTION_RULES.minBidAmount[currentPlayer.category],
-                          )}
+                  <div className="flex items-start justify-between p-4 bg-blue-50 rounded-lg">
+                    <div className="flex gap-4">
+                      {currentPlayer.imageUrl && (
+                        <div className="relative w-32 h-32 rounded-lg overflow-hidden border-2 border-white shadow-md flex-shrink-0">
+                          <Image
+                            src={currentPlayer.imageUrl}
+                            alt={currentPlayer.name}
+                            fill
+                            className="object-cover"
+                            sizes="128px"
+                          />
+                        </div>
+                      )}
+                      
+                      <div>
+                        <div className="flex items-center gap-3 mb-2">
+                          <h3 className="text-xl font-semibold">
+                            {currentPlayer.name}
+                          </h3>
+                          <Badge
+                            className={CATEGORY_COLORS[currentPlayer.category]}
+                          >
+                            {currentPlayer.category}
+                          </Badge>
+                        </div>
+                        <div className="text-sm text-gray-600 space-y-1">
+                          <div><span className="font-semibold">Role:</span> {currentPlayer.playingRole}</div>
+                          <div><span className="font-semibold">Age:</span> {currentPlayer.age}</div>
+                          <div><span className="font-semibold">Wing:</span> {currentPlayer.wing} - {currentPlayer.flatNumber}</div>
+                          <div>
+                            <span className="font-semibold">Base Price:</span>{' '}
+                            {formatCurrency(
+                              AUCTION_RULES.minBidAmount[currentPlayer.category],
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
+
                     {isEditable && (
-                      <Button onClick={() => setShowSoldDialog(true)} size="lg">
+                      <Button onClick={() => setShowSoldDialog(true)} size="lg" className="ml-4">
                         <Gavel className="w-4 h-4 mr-2" />
                         Mark as Sold
                       </Button>
