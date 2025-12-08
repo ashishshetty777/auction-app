@@ -132,7 +132,7 @@ export default function Home() {
                   <ul className="space-y-1 text-gray-600">
                     <li>Total Teams: 7</li>
                     <li>Team Purse: 2 Crores</li>
-                    <li>Min Players: 11</li>
+                    <li>Min Players: 13</li>
                     <li>Max Players: 13</li>
                   </ul>
                 </div>
