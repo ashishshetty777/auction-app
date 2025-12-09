@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useAuction } from '@/lib/auction-context';
 import { useEditAuth } from '@/providers/EditAuthProvider';
+import { sortPlayersByName } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -48,10 +49,15 @@ export default function AuctionPage() {
   const [showSoldDialog, setShowSoldDialog] = useState(false);
   const [selectedTeamId, setSelectedTeamId] = useState('');
   const [bidAmount, setBidAmount] = useState('');
+  const [playerSearchTerm, setPlayerSearchTerm] = useState('');
   const { isEditable } = useEditAuth();
 
-  const availablePlayers = players.filter(p => !p.teamId);
+  const availablePlayers = sortPlayersByName(players.filter(p => !p.teamId));
   const sold = players.filter(p => p.teamId);
+
+  const filteredAvailablePlayers = availablePlayers.filter(player =>
+    player.name.toLowerCase().includes(playerSearchTerm.toLowerCase())
+  );
 
   const currentPlayer = currentAuction.playerId
     ? players.find(p => p.id === currentAuction.playerId)
@@ -303,22 +309,43 @@ export default function AuctionPage() {
                   </Button>
                 </div>
               ) : (
-                <div className="text-center py-8">
-                  <p className="text-gray-500 mb-4">
+                <div className="py-8">
+                  <p className="text-gray-500 mb-4 text-center">
                     No player selected for auction
                   </p>
-                  <Select
-                    value=""
-                    onChange={e => setCurrentAuctionPlayer(e.target.value)}
-                    className="max-w-md mx-auto"
-                  >
-                    <option value="">Select a player...</option>
-                    {availablePlayers.map(player => (
-                      <option key={player.id} value={player.id}>
-                        {player.name} ({player.category})
-                      </option>
-                    ))}
-                  </Select>
+                  <div className="max-w-md mx-auto">
+                    <div className="relative mb-2">
+                      <Input
+                        placeholder="Search players..."
+                        value={playerSearchTerm}
+                        onChange={e => setPlayerSearchTerm(e.target.value)}
+                        className="w-full"
+                      />
+                    </div>
+                    <div className="max-h-60 overflow-y-auto border rounded-md bg-white">
+                      {filteredAvailablePlayers.length > 0 ? (
+                        filteredAvailablePlayers.map(player => (
+                          <div
+                            key={player.id}
+                            onClick={() => {
+                              setCurrentAuctionPlayer(player.id);
+                              setPlayerSearchTerm('');
+                            }}
+                            className="px-4 py-3 hover:bg-gray-100 cursor-pointer border-b last:border-b-0 flex justify-between items-center"
+                          >
+                            <span className="font-medium">{player.name}</span>
+                            <Badge className={CATEGORY_COLORS[player.category]}>
+                              {player.category}
+                            </Badge>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="px-4 py-3 text-gray-500 text-center">
+                          {playerSearchTerm ? 'No players found' : 'Start typing to search...'}
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
               )}
             </CardContent>
