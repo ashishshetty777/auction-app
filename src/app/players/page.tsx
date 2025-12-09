@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useAuction } from '@/lib/auction-context';
 import { useEditAuth } from '@/providers/EditAuthProvider';
+import { sortPlayersByName } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -49,14 +50,16 @@ export default function PlayersPage() {
     category: 'BRONZE' as PlayerCategory,
   });
 
-  const filteredPlayers = players.filter(player => {
-    const matchesSearch = player.name
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    const matchesCategory =
-      filterCategory === 'ALL' || player.category === filterCategory;
-    return matchesSearch && matchesCategory;
-  });
+  const filteredPlayers = sortPlayersByName(
+    players.filter(player => {
+      const matchesSearch = player.name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+      const matchesCategory =
+        filterCategory === 'ALL' || player.category === filterCategory;
+      return matchesSearch && matchesCategory;
+    })
+  );
 
   const handleAddPlayer = () => {
     if (!newPlayer.name || !newPlayer.mobileNumber || !newPlayer.dateOfBirth) {
