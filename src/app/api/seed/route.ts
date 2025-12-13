@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Player from '@/models/Player';
 import Team from '@/models/Team';
-import { PLAYERS_DATA } from '@/lib/players-data';
+import { PLAYERS_DATA } from '@/lib/players-seed';
 import { TEAM_NAMES, AUCTION_RULES } from '@/lib/constants';
 
 export async function POST() {
@@ -49,7 +49,7 @@ export async function POST() {
     console.error('Error seeding database:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to seed database' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

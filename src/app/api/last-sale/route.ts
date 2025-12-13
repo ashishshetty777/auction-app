@@ -25,10 +25,7 @@ export async function POST(request: NextRequest) {
     await connectDB();
     const body = await request.json();
 
-    // Clear all previous last sales
-    await LastSale.deleteMany({});
-
-    // Create new last sale
+    // Create new last sale (keep all previous sales for multi-level undo)
     const lastSale = await LastSale.create(body);
 
     return NextResponse.json({ success: true, data: lastSale }, { status: 201 });
@@ -44,9 +41,18 @@ export async function POST(request: NextRequest) {
 export async function DELETE() {
   try {
     await connectDB();
-    await LastSale.deleteMany({});
 
-    return NextResponse.json({ success: true });
+    // Find and delete only the most recent sale
+    const mostRecentSale = await LastSale.findOne().sort({ timestamp: -1 });
+
+    if (mostRecentSale) {
+      await LastSale.findByIdAndDelete(mostRecentSale._id);
+    }
+
+    // Get the next most recent sale (if any) for the UI to update
+    const nextSale = await LastSale.findOne().sort({ timestamp: -1 }).lean();
+
+    return NextResponse.json({ success: true, data: nextSale });
   } catch (error) {
     console.error('Error deleting last sale:', error);
     return NextResponse.json(

@@ -373,12 +373,20 @@ export function AuctionProvider({ children }: { children: React.ReactNode }) {
 
       setTeams(teams.map(t => (t.id === lastSale.teamId ? updatedTeam : t)));
 
-      // Delete last sale from database
-      await fetch('/api/last-sale', {
+      // Delete last sale from database and get next sale
+      const deleteRes = await fetch('/api/last-sale', {
         method: 'DELETE',
       });
 
-      setLastSale(null);
+      const deleteData = await deleteRes.json();
+
+      // Update lastSale with the next sale (if any), enabling multi-level undo
+      if (deleteData.success && deleteData.data) {
+        setLastSale(deleteData.data);
+      } else {
+        setLastSale(null);
+      }
+
       return true;
     } catch (error) {
       console.error('Error reversing sale:', error);
