@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Player from '@/models/Player';
 import Team from '@/models/Team';
+import LastSale from '@/models/LastSale';
 import { PLAYERS_DATA } from '@/lib/players-seed';
 import { TEAM_NAMES, AUCTION_RULES } from '@/lib/constants';
 
@@ -12,6 +13,7 @@ export async function POST() {
     // Clear existing data
     await Player.deleteMany({});
     await Team.deleteMany({});
+    await LastSale.deleteMany({});
 
     // Seed players
     await Player.insertMany(PLAYERS_DATA);

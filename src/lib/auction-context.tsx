@@ -442,11 +442,6 @@ export function AuctionProvider({ children }: { children: React.ReactNode }) {
       const teamData = await teamRes.json();
       if (!teamData.success) return false;
 
-      // Delete the sale record for this player (if exists)
-      await fetch(`/api/last-sale/${playerId}`, {
-        method: 'DELETE',
-      });
-
       // Update local state with data returned from API
       setPlayers(prevPlayers =>
         prevPlayers.map(p => (p.id === playerId ? playerData.data : p)),
@@ -456,7 +451,12 @@ export function AuctionProvider({ children }: { children: React.ReactNode }) {
         prevTeams.map(t => (t.id === player.teamId ? teamData.data : t)),
       );
 
-      // Refresh last sale
+      // Delete the sale record for this player (if exists) and wait for completion
+      await fetch(`/api/last-sale/${playerId}`, {
+        method: 'DELETE',
+      });
+
+      // Refresh last sale after deletion is complete
       const lastSaleRes = await fetch('/api/last-sale');
       const lastSaleData = await lastSaleRes.json();
       if (lastSaleData.success && lastSaleData.data) {
