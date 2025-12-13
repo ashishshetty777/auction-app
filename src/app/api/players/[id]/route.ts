@@ -36,9 +36,30 @@ export async function PUT(
     const { id } = await params;
     await connectDB();
     const body = await request.json();
+
+    // Handle field removal: if teamId or soldAmount are explicitly undefined/null, use $unset
+    const updateOp: any = {};
+    const unsetOp: any = {};
+
+    Object.keys(body).forEach(key => {
+      if (body[key] === undefined || body[key] === null) {
+        unsetOp[key] = '';
+      } else {
+        updateOp[key] = body[key];
+      }
+    });
+
+    const update: any = {};
+    if (Object.keys(updateOp).length > 0) {
+      update.$set = updateOp;
+    }
+    if (Object.keys(unsetOp).length > 0) {
+      update.$unset = unsetOp;
+    }
+
     const player = await Player.findOneAndUpdate(
       { id },
-      body,
+      update,
       { new: true, runValidators: true }
     ).lean();
 

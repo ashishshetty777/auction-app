@@ -21,6 +21,7 @@ interface AuctionContextType {
   getMaxBid: (teamId: string, category: Player['category']) => number;
   lastSale: LastSale | null;
   reverseLastSale: () => Promise<boolean>;
+  removePlayerFromTeam: (playerId: string) => Promise<boolean>;
   refreshData: () => Promise<void>;
 }
 
@@ -299,8 +300,12 @@ export function AuctionProvider({ children }: { children: React.ReactNode }) {
       }
 
       // Update local state
-      setPlayers(players.map(p => (p.id === playerId ? updatedPlayer : p)));
-      setTeams(teams.map(t => (t.id === teamId ? updatedTeam : t)));
+      setPlayers(prevPlayers =>
+        prevPlayers.map(p => (p.id === playerId ? updatedPlayer : p)),
+      );
+      setTeams(prevTeams =>
+        prevTeams.map(t => (t.id === teamId ? updatedTeam : t)),
+      );
 
       setCurrentAuction({
         playerId: null,
@@ -330,8 +335,8 @@ export function AuctionProvider({ children }: { children: React.ReactNode }) {
       // Update player - remove team assignment
       const updatedPlayer = {
         ...player,
-        teamId: undefined,
-        soldAmount: undefined,
+        teamId: null,
+        soldAmount: null,
       };
       const playerRes = await fetch(`/api/players/${lastSale.playerId}`, {
         method: 'PUT',
@@ -362,16 +367,16 @@ export function AuctionProvider({ children }: { children: React.ReactNode }) {
       const teamData = await teamRes.json();
       if (!teamData.success) return false;
 
-      // Update local state
-      setPlayers(
-        players.map(p =>
-          p.id === lastSale.playerId
-            ? { ...p, teamId: undefined, soldAmount: undefined }
-            : p,
+      // Update local state with data returned from API
+      setPlayers(prevPlayers =>
+        prevPlayers.map(p =>
+          p.id === lastSale.playerId ? playerData.data : p,
         ),
       );
 
-      setTeams(teams.map(t => (t.id === lastSale.teamId ? updatedTeam : t)));
+      setTeams(prevTeams =>
+        prevTeams.map(t => (t.id === lastSale.teamId ? teamData.data : t)),
+      );
 
       // Delete last sale from database and get next sale
       const deleteRes = await fetch('/api/last-sale', {
@@ -394,6 +399,79 @@ export function AuctionProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const removePlayerFromTeam = async (playerId: string): Promise<boolean> => {
+    const player = players.find(p => p.id === playerId);
+    if (!player || !player.teamId) return false;
+
+    const team = teams.find(t => t.id === player.teamId);
+    if (!team) return false;
+
+    try {
+      // Update player - remove team assignment
+      const updatedPlayer = {
+        ...player,
+        teamId: null,
+        soldAmount: null,
+      };
+      const playerRes = await fetch(`/api/players/${playerId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedPlayer),
+      });
+
+      const playerData = await playerRes.json();
+      if (!playerData.success) return false;
+
+      // Update team - remove player and restore purse
+      const updatedTeam = {
+        ...team,
+        players: team.players.filter(p => p.id !== playerId),
+        remainingPurse: team.remainingPurse + (player.soldAmount || 0),
+        categoryCount: {
+          ...team.categoryCount,
+          [player.category]: team.categoryCount[player.category] - 1,
+        },
+      };
+
+      const teamRes = await fetch(`/api/teams/${player.teamId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedTeam),
+      });
+
+      const teamData = await teamRes.json();
+      if (!teamData.success) return false;
+
+      // Delete the sale record for this player (if exists)
+      await fetch(`/api/last-sale/${playerId}`, {
+        method: 'DELETE',
+      });
+
+      // Update local state with data returned from API
+      setPlayers(prevPlayers =>
+        prevPlayers.map(p => (p.id === playerId ? playerData.data : p)),
+      );
+
+      setTeams(prevTeams =>
+        prevTeams.map(t => (t.id === player.teamId ? teamData.data : t)),
+      );
+
+      // Refresh last sale
+      const lastSaleRes = await fetch('/api/last-sale');
+      const lastSaleData = await lastSaleRes.json();
+      if (lastSaleData.success && lastSaleData.data) {
+        setLastSale(lastSaleData.data);
+      } else {
+        setLastSale(null);
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Error removing player from team:', error);
+      return false;
+    }
+  };
+
   return (
     <AuctionContext.Provider
       value={{
@@ -409,6 +487,7 @@ export function AuctionProvider({ children }: { children: React.ReactNode }) {
         getMaxBid,
         lastSale,
         reverseLastSale,
+        removePlayerFromTeam,
         refreshData,
       }}
     >

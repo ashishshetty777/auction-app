@@ -33,7 +33,7 @@ import {
   CATEGORY_TEXT_COLORS_HEX,
   AUCTION_RULES,
 } from '@/lib/constants';
-import { ArrowLeft, Gavel, AlertCircle, Undo2 } from 'lucide-react';
+import { ArrowLeft, Gavel, AlertCircle, Undo2, Trash2 } from 'lucide-react';
 
 export default function AuctionPage() {
   const {
@@ -45,6 +45,7 @@ export default function AuctionPage() {
     getMaxBid,
     lastSale,
     reverseLastSale,
+    removePlayerFromTeam,
   } = useAuction();
   const [showSoldDialog, setShowSoldDialog] = useState(false);
   const [selectedTeamId, setSelectedTeamId] = useState('');
@@ -98,6 +99,23 @@ export default function AuctionPage() {
       const success = await reverseLastSale();
       alert(
         success ? 'Sale reversed successfully!' : 'Failed to reverse sale.',
+      );
+    }
+  };
+
+  const handleDeletePlayerSale = async (playerId: string) => {
+    const player = players.find(p => p.id === playerId);
+    if (!player || !player.teamId) return;
+
+    const team = teams.find(t => t.id === player.teamId);
+    const confirm = window.confirm(
+      `Delete the sale of ${player.name} from ${team?.name} for ${formatCurrency(player.soldAmount || 0)}?`,
+    );
+
+    if (confirm) {
+      const success = await removePlayerFromTeam(playerId);
+      alert(
+        success ? 'Player sale deleted successfully!' : 'Failed to delete player sale.',
       );
     }
   };
@@ -457,15 +475,26 @@ export default function AuctionPage() {
                       return (
                         <div
                           key={slotIndex}
-                          className="rounded p-2 shadow-sm h-16 flex flex-col justify-center"
+                          className="rounded p-2 shadow-sm h-16 flex justify-between items-center gap-1"
                           style={{ backgroundColor: bgColor, color: textColor }}
                         >
-                          <div className="text-xs font-semibold truncate">
-                            {player.name}
+                          <div className="flex-1 min-w-0">
+                            <div className="text-xs font-semibold truncate">
+                              {player.name}
+                            </div>
+                            <div className="text-xs opacity-90">
+                              {formatCurrency(player.soldAmount || 0)}
+                            </div>
                           </div>
-                          <div className="text-xs opacity-90">
-                            {formatCurrency(player.soldAmount || 0)}
-                          </div>
+                          {isEditable && (
+                            <button
+                              onClick={() => handleDeletePlayerSale(player.id)}
+                              className="flex-shrink-0 p-1 hover:bg-black/20 rounded transition-colors"
+                              title="Delete player sale"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </button>
+                          )}
                         </div>
                       );
                     } else {
@@ -542,9 +571,9 @@ export default function AuctionPage() {
                     {team.players.map((player, idx) => (
                       <div
                         key={player.id}
-                        className={`${CATEGORY_BG_COLORS[player.category]} ${CATEGORY_TEXT_COLORS[player.category]} rounded p-3 flex justify-between items-center`}
+                        className={`${CATEGORY_BG_COLORS[player.category]} ${CATEGORY_TEXT_COLORS[player.category]} rounded p-3 flex justify-between items-center gap-2`}
                       >
-                        <div>
+                        <div className="flex-1 min-w-0">
                           <div className="font-semibold">
                             {idx + 1}. {player.name}
                           </div>
@@ -557,6 +586,15 @@ export default function AuctionPage() {
                             {formatCurrency(player.soldAmount || 0)}
                           </div>
                         </div>
+                        {isEditable && (
+                          <button
+                            onClick={() => handleDeletePlayerSale(player.id)}
+                            className="flex-shrink-0 p-2 hover:bg-black/20 rounded transition-colors"
+                            title="Delete player sale"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        )}
                       </div>
                     ))}
                   </div>
