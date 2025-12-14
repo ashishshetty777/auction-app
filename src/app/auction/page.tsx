@@ -722,7 +722,7 @@ export default function AuctionPage() {
 
       {/* Player View Modal */}
       <Dialog open={showPlayerViewModal} onOpenChange={setShowPlayerViewModal}>
-        <DialogContent className="max-w-2xl" onClose={() => setShowPlayerViewModal(false)}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" onClose={() => setShowPlayerViewModal(false)}>
           <DialogHeader>
             <DialogTitle>Player Details</DialogTitle>
           </DialogHeader>
