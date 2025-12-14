@@ -33,7 +33,7 @@ import {
   CATEGORY_TEXT_COLORS_HEX,
   AUCTION_RULES,
 } from '@/lib/constants';
-import { ArrowLeft, Gavel, AlertCircle, Undo2, Trash2 } from 'lucide-react';
+import { ArrowLeft, Gavel, AlertCircle, Undo2, Trash2, Eye } from 'lucide-react';
 
 export default function AuctionPage() {
   const {
@@ -48,6 +48,7 @@ export default function AuctionPage() {
     removePlayerFromTeam,
   } = useAuction();
   const [showSoldDialog, setShowSoldDialog] = useState(false);
+  const [showPlayerViewModal, setShowPlayerViewModal] = useState(false);
   const [selectedTeamId, setSelectedTeamId] = useState('');
   const [bidAmount, setBidAmount] = useState('');
   const [playerSearchTerm, setPlayerSearchTerm] = useState('');
@@ -279,12 +280,22 @@ export default function AuctionPage() {
                       </div>
                     </div>
 
-                    {isEditable && (
-                      <Button onClick={() => setShowSoldDialog(true)} size="lg" className="ml-4">
-                        <Gavel className="w-4 h-4 mr-2" />
-                        Mark as Sold
+                    <div className="flex flex-col gap-2 ml-4">
+                      <Button
+                        onClick={() => setShowPlayerViewModal(true)}
+                        size="lg"
+                        variant="outline"
+                      >
+                        <Eye className="w-4 h-4 mr-2" />
+                        View Player
                       </Button>
-                    )}
+                      {isEditable && (
+                        <Button onClick={() => setShowSoldDialog(true)} size="lg">
+                          <Gavel className="w-4 h-4 mr-2" />
+                          Mark as Sold
+                        </Button>
+                      )}
+                    </div>
                   </div>
 
                   <div className="border rounded-lg p-4">
@@ -705,6 +716,74 @@ export default function AuctionPage() {
               Cancel
             </Button>
             <Button onClick={handlePlayerSold}>Confirm Sale</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Player View Modal */}
+      <Dialog open={showPlayerViewModal} onOpenChange={setShowPlayerViewModal}>
+        <DialogContent className="max-w-2xl" onClose={() => setShowPlayerViewModal(false)}>
+          <DialogHeader>
+            <DialogTitle>Player Details</DialogTitle>
+          </DialogHeader>
+
+          {currentPlayer && (
+            <div className="space-y-6 py-4">
+              {/* Large Player Image */}
+              {currentPlayer.imageUrl && (
+                <div className="relative w-full h-96 rounded-lg overflow-hidden border-2 border-gray-200 shadow-lg">
+                  <Image
+                    src={currentPlayer.imageUrl}
+                    alt={currentPlayer.name}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    priority
+                  />
+                </div>
+              )}
+
+              {/* Player Information */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <h3 className="text-2xl font-bold">{currentPlayer.name}</h3>
+                  <Badge className={CATEGORY_COLORS[currentPlayer.category]}>
+                    {currentPlayer.category}
+                  </Badge>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 text-base">
+                  <div className="space-y-2">
+                    <div>
+                      <span className="font-semibold text-gray-700">Role:</span>
+                      <p className="text-gray-900">{currentPlayer.playingRole}</p>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-gray-700">Age:</span>
+                      <p className="text-gray-900">{currentPlayer.age}</p>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div>
+                      <span className="font-semibold text-gray-700">Wing:</span>
+                      <p className="text-gray-900">{currentPlayer.wing} - {currentPlayer.flatNumber}</p>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-gray-700">Base Price:</span>
+                      <p className="text-gray-900">
+                        {formatCurrency(
+                          AUCTION_RULES.minBidAmount[currentPlayer.category],
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button onClick={() => setShowPlayerViewModal(false)}>Close</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
