@@ -16,14 +16,17 @@ const SOLD_HOLD_MS = 6000;
 type SoldMoment = { player: Player; team: Team; amount: number; key: number };
 
 export default function StagePage() {
-  const { players, teams, loading, currentAuction, lastSale, getMaxBid } = useAuction();
+  const { players, teams, loading, currentAuction, lastSale, getMaxBid } =
+    useAuction();
   const [sold, setSold] = useState<SoldMoment | null>(null);
   // After the stamp clears, the buying team's purse settles from bright to normal.
-  const [settle, setSettle] = useState<{ teamId: string; key: number } | null>(null);
+  const [settle, setSettle] = useState<{ teamId: string; key: number } | null>(
+    null,
+  );
   const seenSale = useRef<number | null | undefined>(undefined);
 
   const currentPlayer = currentAuction.playerId
-    ? players.find(p => p.id === currentAuction.playerId) ?? null
+    ? (players.find(p => p.id === currentAuction.playerId) ?? null)
     : null;
 
   // Stamp SOLD only for sales that happen while the stage is open.
@@ -79,7 +82,12 @@ export default function StagePage() {
 
       <main className="relative z-10 flex min-h-0 flex-1 flex-col px-[3vw] pb-[2.4vh] pt-[2vh]">
         {loading ? null : currentPlayer ? (
-          <OnStage key={currentPlayer.id} player={currentPlayer} teams={teams} getMaxBid={getMaxBid} />
+          <OnStage
+            key={currentPlayer.id}
+            player={currentPlayer}
+            teams={teams}
+            getMaxBid={getMaxBid}
+          />
         ) : (
           <div className="flex min-h-0 flex-1 flex-col">
             <h1 className="mb-[1.6vh] font-display text-[clamp(1.4rem,1.8vw,2.4rem)] font-extrabold uppercase tracking-[0.14em] text-ink-2">
@@ -130,13 +138,16 @@ function OnStage({
             {player.name}
           </h1>
           <p className="mt-[2.4vh] text-[clamp(1.25rem,1.9vw,2.4rem)] font-medium text-ink-2">
-            {player.playingRole} · Age {player.age} · {player.wing} {player.flatNumber}
+            {player.playingRole} · Age {player.age} · {player.wing}{' '}
+            {player.flatNumber}
           </p>
           {player.battingStyle && (
             <p className="mt-[0.8vh] text-[clamp(1.1rem,1.6vw,2rem)] font-medium text-ink-2">
               {player.battingStyle}-hand bat
               {player.bowlingStyle &&
-                (player.bowlingStyle === 'None' ? ' · Doesn’t bowl' : ` · ${player.bowlingStyle}-arm bowler`)}
+                (player.bowlingStyle === 'None'
+                  ? ' · Doesn’t bowl'
+                  : ` · ${player.bowlingStyle}-arm bowler`)}
             </p>
           )}
           <p className="mt-[3.2vh] flex items-baseline gap-[1vw]">
@@ -151,40 +162,45 @@ function OnStage({
       </div>
 
       {/* Purse strip */}
-      <div
-        className="mt-[2.4vh] grid overflow-hidden rounded-md border border-rule-strong bg-night-2/90"
-        style={{ gridTemplateColumns: `repeat(${teams.length}, minmax(0, 1fr))` }}
-      >
-        {teams.map((team, i) => {
-          const max = getMaxBid(team.id, player.category);
-          return (
-            <div
-              key={team.id}
-              className={`flex min-w-0 flex-col justify-between gap-[1vh] px-[1vw] py-[1.4vh] ${i > 0 ? 'border-l border-rule-strong' : ''}`}
-            >
-              <span className="font-display text-[clamp(1.1rem,1.5vw,2rem)] font-extrabold uppercase leading-[0.95] tracking-wide">
-                {team.name}
-              </span>
-              <span className="flex flex-col gap-[0.4vh]">
-                <span className="tabular text-[clamp(1.2rem,1.8vw,2.4rem)] font-semibold leading-none text-cream">
-                  {formatMoney(team.remainingPurse)}
+      {teams.length > 0 && (
+        <div
+          className="mt-[2.4vh] grid overflow-hidden rounded-md border border-rule-strong bg-night-2/90"
+          style={{
+            gridTemplateColumns: `repeat(${teams.length}, minmax(0, 1fr))`,
+          }}
+        >
+          {teams.map((team, i) => {
+            const max = getMaxBid(team.id, player.category);
+            return (
+              <div
+                key={team.id}
+                className={`flex min-w-0 flex-col justify-between gap-[1vh] px-[1vw] py-[1.4vh] ${i > 0 ? 'border-l border-rule-strong' : ''}`}
+              >
+                <span className="font-display text-[clamp(1.1rem,1.5vw,2rem)] font-extrabold uppercase leading-[0.95] tracking-wide">
+                  {team.name}
                 </span>
-                <span
-                  className={`tabular text-[clamp(1rem,1.35vw,1.8rem)] font-semibold ${max > 0 ? 'text-ink-2' : 'text-ink-3'}`}
-                >
-                  {max > 0 ? (
-                    <>
-                      Max <span className="text-cream">{formatMoney(max)}</span>
-                    </>
-                  ) : (
-                    'Can’t bid'
-                  )}
+                <span className="flex flex-col gap-[0.4vh]">
+                  <span className="tabular text-[clamp(1.2rem,1.8vw,2.4rem)] font-semibold leading-none text-cream">
+                    {formatMoney(team.remainingPurse)}
+                  </span>
+                  <span
+                    className={`tabular text-[clamp(1rem,1.35vw,1.8rem)] font-semibold ${max > 0 ? 'text-ink-2' : 'text-ink-3'}`}
+                  >
+                    {max > 0 ? (
+                      <>
+                        Max{' '}
+                        <span className="text-cream">{formatMoney(max)}</span>
+                      </>
+                    ) : (
+                      'Can’t bid'
+                    )}
+                  </span>
                 </span>
-              </span>
-            </div>
-          );
-        })}
-      </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </>
   );
 }
@@ -231,7 +247,8 @@ function SoldTakeover({ moment }: { moment: SoldMoment }) {
             className="mt-[1vh] inline-block bg-night-3 py-[1.6vh] pl-[2.4vw] pr-[3vw] font-display text-[clamp(3rem,5.6vw,7.5rem)] font-black uppercase leading-[0.88] text-ink [text-wrap:balance]"
             style={{
               // The logo's banner: square at the start, swallowtail notch at the end.
-              clipPath: 'polygon(0 0, 100% 0, calc(100% - 0.35em) 50%, 100% 100%, 0 100%)',
+              clipPath:
+                'polygon(0 0, 100% 0, calc(100% - 0.35em) 50%, 100% 100%, 0 100%)',
               boxShadow: 'inset 0 -0.5vh 0 rgba(232,49,127,0.55)',
             }}
           >

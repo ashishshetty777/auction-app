@@ -406,8 +406,15 @@ function SalePanel({
       <fieldset>
         <legend className="mb-2 flex w-full items-baseline justify-between text-sm font-semibold text-ink-2">
           <span>Sold to</span>
-          <span className="hidden text-xs font-medium text-ink-3 lg:inline">Keys 1–{teams.length}</span>
+          {teams.length > 0 && (
+            <span className="hidden text-xs font-medium text-ink-3 lg:inline">Keys 1–{teams.length}</span>
+          )}
         </legend>
+        {teams.length === 0 && (
+          <p className="rounded border border-dashed border-rule-strong px-3 py-4 text-sm text-ink-2">
+            No teams yet. Players can be sold once the teams are set up.
+          </p>
+        )}
         <div role="radiogroup" aria-label="Team" className="grid gap-1">
           {teams.map((t, i) => {
             const max = getMaxBid(t.id, player.category);

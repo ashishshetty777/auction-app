@@ -78,7 +78,11 @@ export default function Home() {
                 <span className="font-semibold text-ink">{titleCase(onBlock.name)}</span>
               </>
             ) : sold === 0 ? (
-              <>{players.length} players registered across {teams.length} teams.</>
+              teams.length === 0 ? (
+                <>Teams will be announced before the auction.</>
+              ) : (
+                <>{players.length} players in the pool across {teams.length} teams.</>
+              )
             ) : (
               <>
                 <span className="tabular font-semibold text-ink">{sold}</span> of{' '}
@@ -139,6 +143,13 @@ export default function Home() {
                   </td>
                 </tr>
               ))}
+              {!loading && teams.length === 0 && (
+                <tr className="border-b border-rule">
+                  <td colSpan={3} className="py-4 text-[15px] text-ink-2">
+                    Teams will be announced before the auction.
+                  </td>
+                </tr>
+              )}
               {loading &&
                 Array.from({ length: AUCTION_RULES.totalTeams }, (_, i) => (
                   <tr key={i} className="border-b border-rule">
