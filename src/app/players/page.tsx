@@ -76,7 +76,7 @@ export default function PlayersPage() {
       return;
     }
 
-    // The picker gives yyyy-mm-dd; player records keep dd-mm-yyyy and the age on auction day.
+    // The picker gives yyyy-mm-dd; player records keep dd-mm-yyyy and the age on match day.
     addPlayer({
       ...newPlayer,
       dateOfBirth: toStoredDate(newPlayer.dateOfBirth),
@@ -447,7 +447,7 @@ export default function PlayersPage() {
             <Field
               id="add-dob"
               label="Date of birth"
-              hint={newPlayer.dateOfBirth ? `${ageOn(newPlayer.dateOfBirth)} on auction day` : undefined}
+              hint={newPlayer.dateOfBirth ? `${ageOn(newPlayer.dateOfBirth)} on match day` : undefined}
             >
               <DateOfBirthSelect
                 id="add-dob"

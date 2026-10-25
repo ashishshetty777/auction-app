@@ -67,7 +67,7 @@ export default function Home() {
             {SEASON.league}
           </h1>
           <p className="mt-4 font-display text-xl font-bold uppercase tracking-[0.14em] text-cream">
-            Season {SEASON.season} · Player auction · {SEASON.auctionDate}
+            Season {SEASON.season} · Player auction
           </p>
           <p className="mt-5 min-h-[1.75rem] text-lg text-ink-2" aria-live="polite">
             {loading ? (
