@@ -38,7 +38,11 @@ export default function RegistrationsPage() {
   const load = useCallback(async () => {
     if (!adminKey) return;
     try {
-      const res = await fetch('/api/registrations', { headers: { 'x-admin-key': adminKey }, cache: 'no-store' });
+      const res = await fetch('/api/registrations', {
+        headers: { 'x-admin-key': adminKey },
+        cache: 'no-store',
+        signal: AbortSignal.timeout(20000),
+      });
       const data = await res.json();
       if (!data.success) throw new Error(data.error);
       setRows(data.data);
@@ -109,7 +113,11 @@ export default function RegistrationsPage() {
             Registrations
           </h1>
           <p className="tabular mt-2 text-[15px] text-ink-2">
-            {rows ? `${rows.length} received · ${pending.length} waiting for a category` : 'Loading…'}
+            {rows
+              ? `${rows.length} received · ${pending.length} waiting for a category`
+              : failed
+                ? 'Not loaded'
+                : 'Loading…'}
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -144,7 +152,8 @@ export default function RegistrationsPage() {
 
       {failed && !rows ? (
         <p role="alert" className="mt-8 text-[15px] text-[#ff8a90]">
-          Couldn’t load registrations. Lock and unlock editing again, then reload.
+          Couldn’t load registrations. The server may not be reaching the database. It retries every 15
+          seconds; if this stays, lock and unlock editing again, then reload.
         </p>
       ) : !rows ? (
         <div className="mt-4 grid gap-2">
