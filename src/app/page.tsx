@@ -23,6 +23,9 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 
+// Reset is hidden for now: this season's pool is built by hand from registrations.
+const SHOW_RESET = false;
+
 export default function Home() {
   const { players, teams, currentAuction, loading } = useAuction();
   const { isEditable, adminKey } = useEditAuth();
@@ -199,7 +202,7 @@ export default function Home() {
         </section>
       </div>
 
-      {isEditable && (
+      {SHOW_RESET && isEditable && (
         <section
           aria-labelledby="admin-heading"
           className="mt-16 flex flex-wrap items-center justify-between gap-4 rounded-md border border-ball/40 px-5 py-4"
