@@ -1,15 +1,32 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Barlow, Barlow_Condensed, Big_Shoulders_Display } from "next/font/google";
 import "./globals.css";
 import { AuctionProvider } from "@/lib/auction-context";
 import { EditAuthProvider } from "@/providers/EditAuthProvider";
-import { EditAccessControl } from "@/components/EditAccessControl";
+import { ToastProvider } from "@/components/ui/toast";
+import { SEASON } from "@/lib/constants";
 
-const inter = Inter({ subsets: ["latin"] });
+const display = Big_Shoulders_Display({
+  subsets: ["latin"],
+  weight: ["600", "700", "800", "900"],
+  variable: "--font-display",
+});
+
+const condensed = Barlow_Condensed({
+  subsets: ["latin"],
+  weight: ["500", "600"],
+  variable: "--font-condensed",
+});
+
+const sans = Barlow({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-sans",
+});
 
 export const metadata: Metadata = {
-  title: "SCL-2026 Auction App",
-  description: "Cricket auction management system",
+  title: `${SEASON.short} Season ${SEASON.season} Auction`,
+  description: `${SEASON.league} ${SEASON.year} player auction`,
 };
 
 export default function RootLayout({
@@ -18,12 +35,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" className={`${display.variable} ${sans.variable} ${condensed.variable}`}>
+      <body className="font-sans">
         <AuctionProvider>
           <EditAuthProvider>
-            {children}
-            <EditAccessControl />
+            <ToastProvider>{children}</ToastProvider>
           </EditAuthProvider>
         </AuctionProvider>
       </body>

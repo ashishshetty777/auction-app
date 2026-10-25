@@ -35,3 +35,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+/public/uploads
+
+# Impeccable working files (screenshots, live sessions)
+/.impeccable/review/
+/.impeccable/live/

@@ -15,6 +15,10 @@ export interface Player {
   teamId?: string;
   soldAmount?: number;
   imageUrl?: string;
+  battingStyle?: 'Left' | 'Right';
+  bowlingStyle?: 'Left' | 'Right' | 'None';
+  /** Set when the player came in through the registration form */
+  registrationId?: string;
 }
 
 export interface Team {

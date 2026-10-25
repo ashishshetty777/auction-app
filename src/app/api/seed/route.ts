@@ -1,19 +1,32 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Player from '@/models/Player';
 import Team from '@/models/Team';
 import LastSale from '@/models/LastSale';
+import AuctionState from '@/models/AuctionState';
 import { PLAYERS_DATA } from '@/lib/players-seed';
 import { TEAM_NAMES, AUCTION_RULES } from '@/lib/constants';
 
-export async function POST() {
+// Loads the original player list into an empty database. Players now come in
+// through registration, so this refuses to run over existing players unless
+// called with ?force=1. Resetting the auction is /api/reset.
+export async function POST(request: NextRequest) {
   try {
     await connectDB();
+
+    const force = new URL(request.url).searchParams.get('force') === '1';
+    if (!force && (await Player.estimatedDocumentCount()) > 0) {
+      return NextResponse.json(
+        { success: false, error: 'Players already exist. Use /api/reset to restart the auction.' },
+        { status: 409 },
+      );
+    }
 
     // Clear existing data
     await Player.deleteMany({});
     await Team.deleteMany({});
     await LastSale.deleteMany({});
+    await AuctionState.deleteMany({});
 
     // Seed players
     await Player.insertMany(PLAYERS_DATA);

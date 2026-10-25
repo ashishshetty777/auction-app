@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useEditAuth } from '@/providers/EditAuthProvider';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Input, Field } from '@/components/ui/input';
 import {
   Dialog,
   DialogContent,
@@ -13,19 +13,18 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Lock, Unlock } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-export function EditAccessControl() {
+export function EditAccessControl({ className }: { className?: string }) {
   const { isEditable, verifyPassword, logout } = useEditAuth();
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
+  const [showLockDialog, setShowLockDialog] = useState(false);
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
 
   const handleAccessCheck = () => {
     if (isEditable) {
-      // confirm logout
-      if (confirm('Exit edit mode?')) {
-        logout();
-      }
+      setShowLockDialog(true);
     } else {
       setShowPasswordDialog(true);
       setError(false);
@@ -46,54 +45,90 @@ export function EditAccessControl() {
 
   return (
     <>
-      <Button
+      <button
+        type="button"
         onClick={handleAccessCheck}
-        className={`fixed bottom-8 right-8 z-50 shadow-lg rounded-full w-12 h-12 p-0 ${
-          isEditable ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-800 hover:bg-gray-900'
-        }`}
-        title={isEditable ? 'Edit Mode Enabled (Click to Lock)' : 'Enable Edit Mode'}
+        className={cn(
+          'inline-flex h-10 shrink-0 items-center gap-2 rounded-full border px-3 text-sm font-semibold transition-colors sm:px-3.5',
+          isEditable
+            ? 'border-turf/50 bg-turf/10 text-turf hover:bg-turf/20'
+            : 'border-rule-strong text-ink-2 hover:border-ink-3 hover:text-ink',
+          className,
+        )}
       >
         {isEditable ? (
-          <Unlock className="w-5 h-5 text-white" />
+          <Unlock className="h-4 w-4" />
         ) : (
-          <Lock className="w-5 h-5 text-white" />
+          <Lock className="h-4 w-4" />
         )}
-      </Button>
+        <span className="sr-only sm:not-sr-only">{isEditable ? 'Editing' : 'View only'}</span>
+      </button>
 
       <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
-        <DialogContent>
+        <DialogContent className="max-w-md" onClose={() => setShowPasswordDialog(false)}>
           <DialogHeader>
-            <DialogTitle>Enter Admin Password</DialogTitle>
+            <DialogTitle>Unlock editing</DialogTitle>
             <DialogDescription>
-              Please enter the password to enable edit access.
+              Enter the admin password to record sales and manage players on this device.
             </DialogDescription>
           </DialogHeader>
 
-          <form onSubmit={handleSubmit} className="space-y-4 py-4">
-            <div className="space-y-2">
+          <form onSubmit={handleSubmit} className="mt-5">
+            <Field
+              id="admin-password"
+              label="Admin password"
+              error={error ? 'That password is not right. Try again.' : null}
+            >
               <Input
+                id="admin-password"
                 type="password"
-                placeholder="Password"
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);
                   setError(false);
                 }}
-                className={error ? 'border-red-500' : ''}
-                autoFocus
+                aria-invalid={error}
+                aria-describedby={error ? 'admin-password-error' : undefined}
+                data-autofocus
               />
-              {error && (
-                <p className="text-sm text-red-500">Incorrect password</p>
-              )}
-            </div>
-            
+            </Field>
+
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setShowPasswordDialog(false)}>
+              <Button variant="ghost" onClick={() => setShowPasswordDialog(false)}>
                 Cancel
               </Button>
-              <Button type="submit">Unlock</Button>
+              <Button type="submit" variant="primary">
+                Unlock
+              </Button>
             </DialogFooter>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showLockDialog} onOpenChange={setShowLockDialog}>
+        <DialogContent className="max-w-md" onClose={() => setShowLockDialog(false)}>
+          <DialogHeader>
+            <DialogTitle>Lock editing?</DialogTitle>
+            <DialogDescription>
+              This device goes back to view only. You will need the password to record sales again.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setShowLockDialog(false)}>
+              Keep editing
+            </Button>
+            <Button
+              variant="primary"
+              data-autofocus
+              onClick={() => {
+                logout();
+                setShowLockDialog(false);
+              }}
+            >
+              Lock
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </>

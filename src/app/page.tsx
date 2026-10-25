@@ -2,189 +2,247 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import { Button } from '@/components/ui/button';
+import { ClipboardPen, Gavel, MonitorPlay, Users, RotateCcw, Loader2 } from 'lucide-react';
+import { useAuction } from '@/lib/auction-context';
 import { useEditAuth } from '@/providers/EditAuthProvider';
+import { AUCTION_RULES, CATEGORY_ORDER, SEASON } from '@/lib/constants';
+import { formatMoney, titleCase } from '@/lib/utils';
+import { AppShell } from '@/components/AppShell';
+import { PoweredBy } from '@/components/PoweredBy';
+import { SeasonLogo } from '@/components/SeasonLogo';
+import { buttonVariants, Button } from '@/components/ui/button';
+import { Input, Field } from '@/components/ui/input';
+import { CategoryTag } from '@/components/ui/badge';
+import { useToast } from '@/components/ui/toast';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Trophy, Users, Gavel, RotateCcw } from 'lucide-react';
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 export default function Home() {
-  const { isEditable } = useEditAuth();
+  const { players, teams, currentAuction, loading } = useAuction();
+  const { isEditable, adminKey } = useEditAuth();
+  const toast = useToast();
+  const [showReset, setShowReset] = useState(false);
+  const [resetText, setResetText] = useState('');
   const [isResetting, setIsResetting] = useState(false);
 
+  const sold = players.filter(p => p.teamId).length;
+  const onBlock = currentAuction.playerId
+    ? players.find(p => p.id === currentAuction.playerId)
+    : undefined;
+
   const handleReset = async () => {
-    const confirmed = window.confirm(
-      'Are you sure you want to reset all data? This will delete all players and teams and restore the initial seeded data. This action cannot be undone.'
-    );
-
-    if (!confirmed) return;
-
     try {
       setIsResetting(true);
-      const response = await fetch('/api/seed', {
-        method: 'POST',
-      });
-
+      const response = await fetch('/api/reset', { method: 'POST', headers: { 'x-admin-key': adminKey ?? '' } });
       const data = await response.json();
 
       if (data.success) {
-        alert('Database reset successfully! All data has been restored to the initial state.');
         window.location.reload();
       } else {
-        alert('Failed to reset database. Please try again.');
+        toast({ tone: 'error', title: 'Reset failed', detail: 'Nothing was deleted. Try again.' });
       }
     } catch (error) {
       console.error('Error resetting database:', error);
-      alert('Error resetting database. Please try again.');
+      toast({ tone: 'error', title: 'Reset failed', detail: 'Couldn’t reach the server. Nothing was deleted.' });
     } finally {
       setIsResetting(false);
     }
   };
+
+  const squadSize = AUCTION_RULES.maxPlayers;
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex flex-col items-end gap-1">
-          <span className="text-xs text-gray-500">Powered by</span>
-          <Image
-            src="/images/iotric.webp"
-            alt="iotric"
-            width={120}
-            height={40}
-          />
-        </div>
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center mb-6">
-            {/* <Trophy className="w-20 h-20 text-yellow-500" /> */}
-            <Image
-              src="/images/logo.jpg"
-              alt="iotric"
-              width={240}
-              height={80}
-            />
-          </div>
-          <h1 className="text-5xl font-bold text-gray-900 mb-4">
-            SCL-2026 Auction
+    <AppShell>
+      {/* Identity */}
+      <section className="grid items-center gap-8 pt-4 md:grid-cols-[minmax(0,17rem)_minmax(0,1fr)] md:gap-12 md:pt-10">
+        <SeasonLogo className="mx-auto h-auto w-56 overflow-hidden rounded-lg shadow-[0_30px_70px_-25px_rgba(232,49,127,0.55)] ring-1 ring-rule-strong md:w-full" />
+        <div>
+          <h1 className="font-display text-[clamp(3rem,7vw,5.75rem)] font-black uppercase leading-[0.86] tracking-wide text-ink [text-wrap:balance]">
+            {SEASON.league}
           </h1>
-          <p className="text-xl text-gray-600">
-            Cricket Player Auction Management System
+          <p className="mt-4 font-display text-xl font-bold uppercase tracking-[0.14em] text-cream">
+            Season {SEASON.season} · Player auction · {SEASON.auctionDate}
           </p>
+          <p className="mt-5 min-h-[1.75rem] text-lg text-ink-2" aria-live="polite">
+            {loading ? (
+              <span className="inline-block h-5 w-64 animate-pulse rounded bg-night-3 align-middle" />
+            ) : onBlock ? (
+              <>
+                On the block now:{' '}
+                <span className="font-semibold text-ink">{titleCase(onBlock.name)}</span>
+              </>
+            ) : sold === 0 ? (
+              <>{players.length} players registered across {teams.length} teams.</>
+            ) : (
+              <>
+                <span className="tabular font-semibold text-ink">{sold}</span> of{' '}
+                <span className="tabular">{players.length}</span> players sold so far.
+              </>
+            )}
+          </p>
+          <div className="mt-7 flex flex-wrap gap-3">
+            <Link href="/register" className={buttonVariants({ variant: 'primary', size: 'lg' })}>
+              <ClipboardPen />
+              Register to play
+            </Link>
+            <Link href="/auction" className={buttonVariants({ size: 'lg' })}>
+              <Gavel />
+              Go to the auction
+            </Link>
+            <Link href="/stage" target="_blank" className={buttonVariants({ variant: 'ghost', size: 'lg' })}>
+              <MonitorPlay />
+              Open the stage
+            </Link>
+            <Link href="/players" className={buttonVariants({ variant: 'ghost', size: 'lg' })}>
+              <Users />
+              Players
+            </Link>
+          </div>
+          <p className="mt-3 text-sm text-ink-3">
+            Registration for Season {SEASON.season} is open. Keep the password from the organisers handy.
+          </p>
+          <PoweredBy size="lg" className="mt-8 flex-wrap" />
         </div>
+      </section>
 
-        <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-          <Link href="/players">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
-              <CardHeader>
-                <div className="flex items-center gap-4">
-                  <Users className="w-10 h-10 text-blue-500" />
-                  <div>
-                    <CardTitle>Players</CardTitle>
-                    <CardDescription>Manage player database</CardDescription>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-600">
-                  View, add, and manage players across all categories: Legend,
-                  Youngstar, Gold, Silver, and Bronze.
-                </p>
-                <Button className="mt-4 w-full">View Players</Button>
-              </CardContent>
-            </Card>
-          </Link>
+      <div className="mt-16 grid gap-10 lg:grid-cols-2 lg:gap-12">
+        {/* Teams */}
+        <section aria-labelledby="teams-heading">
+          <h2 id="teams-heading" className="font-display text-3xl font-black uppercase tracking-wide text-ink">
+            Teams
+          </h2>
+          <table className="mt-4 w-full border-collapse text-left">
+            <thead>
+              <tr className="border-b border-rule-strong text-sm text-ink-3">
+                <th scope="col" className="py-2 pr-3 font-semibold">Team</th>
+                <th scope="col" className="py-2 pr-3 text-right font-semibold">Purse left</th>
+                <th scope="col" className="py-2 text-right font-semibold">Squad</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(loading ? [] : teams).map(team => (
+                <tr key={team.id} className="border-b border-rule">
+                  <th scope="row" className="py-3 pr-3 font-display text-lg font-extrabold uppercase leading-tight tracking-wide text-ink">
+                    {team.name}
+                  </th>
+                  <td className="tabular py-3 pr-3 text-right font-semibold text-cream">
+                    {formatMoney(team.remainingPurse)}
+                  </td>
+                  <td className="tabular py-3 text-right text-ink-2">
+                    {team.players.length}/{squadSize}
+                  </td>
+                </tr>
+              ))}
+              {loading &&
+                Array.from({ length: AUCTION_RULES.totalTeams }, (_, i) => (
+                  <tr key={i} className="border-b border-rule">
+                    <td colSpan={3} className="py-3">
+                      <span className="block h-5 animate-pulse rounded bg-night-2" />
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </section>
 
-          <Link href="/auction">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
-              <CardHeader>
-                <div className="flex items-center gap-4">
-                  <Gavel className="w-10 h-10 text-green-500" />
-                  <div>
-                    <CardTitle>Team Auction</CardTitle>
-                    <CardDescription>Manage team auctions</CardDescription>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-600">
-                  Conduct auctions, assign players to teams, and track team
-                  budgets and category limits.
-                </p>
-                <Button className="mt-4 w-full">Start Auction</Button>
-              </CardContent>
-            </Card>
-          </Link>
-        </div>
-
-        <div className="mt-12 max-w-4xl mx-auto">
-          <Card>
-            <CardHeader>
-              <CardTitle>Auction Rules</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid md:grid-cols-2 gap-4 text-sm">
-                <div>
-                  <h4 className="font-semibold mb-2">Team Composition</h4>
-                  <ul className="space-y-1 text-gray-600">
-                    <li>Total Teams: 7</li>
-                    <li>Team Purse: 2 Crores</li>
-                    <li>Min Players: 13</li>
-                    <li>Max Players: 13</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-semibold mb-2">Category Limits</h4>
-                  <ul className="space-y-1 text-gray-600">
-                    <li>Legend: 1 player</li>
-                    <li>Youngstar: 1 player</li>
-                    <li>Gold: 2 players (required)</li>
-                    <li>Silver: 5 players (required)</li>
-                    <li>Bronze: 4 players (required)</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-semibold mb-2">Minimum Bid Amounts</h4>
-                  <ul className="space-y-1 text-gray-600">
-                    <li>Gold: 15 Lakhs</li>
-                    <li>Silver: 10 Lakhs</li>
-                    <li>Others: 5 Lakhs</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-semibold mb-2">Teams</h4>
-                  <ul className="space-y-1 text-gray-600 text-xs">
-                    <li>Gujarat Lions</li>
-                    <li>Chhava Sena</li>
-                    <li>Team Lagaan</li>
-                    <li>Pratham 11</li>
-                    <li>Yohan&apos;s Warriors</li>
-                    <li>Khalsa Warriors</li>
-                    <li>Shree Siddhivinayak Strikers</li>
-                  </ul>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Reset Button - Fixed at bottom right */}
-        {/* Reset Button - Fixed at bottom right */}
-        {isEditable && (
-          <Button
-            onClick={handleReset}
-            disabled={isResetting}
-            className="fixed bottom-24 right-8 bg-red-600 hover:bg-red-700 text-white shadow-lg"
-            size="lg"
-          >
-            <RotateCcw className="w-4 h-4 mr-2" />
-            {isResetting ? 'Resetting...' : 'Reset Database'}
-          </Button>
-        )}
+        {/* Rules */}
+        <section aria-labelledby="rules-heading">
+          <h2 id="rules-heading" className="font-display text-3xl font-black uppercase tracking-wide text-ink">
+            Squad rules
+          </h2>
+          <p className="mt-2 text-[15px] text-ink-2">
+            Every team has a <span className="tabular font-semibold text-cream">{formatMoney(AUCTION_RULES.teamPurse)}</span> purse
+            and must finish with exactly <span className="tabular font-semibold text-ink">{squadSize}</span> players.
+            The console only offers a team a price it can afford while still filling every place.
+          </p>
+          <table className="mt-4 w-full border-collapse text-left">
+            <thead>
+              <tr className="border-b border-rule-strong text-sm text-ink-3">
+                <th scope="col" className="py-2 pr-3 font-semibold">Category</th>
+                <th scope="col" className="py-2 pr-3 text-right font-semibold">Places</th>
+                <th scope="col" className="py-2 text-right font-semibold">Base price</th>
+              </tr>
+            </thead>
+            <tbody>
+              {CATEGORY_ORDER.map(c => (
+                <tr key={c} className="border-b border-rule">
+                  <th scope="row" className="py-3 pr-3 font-normal">
+                    <CategoryTag category={c} size="md" />
+                  </th>
+                  <td className="tabular py-3 pr-3 text-right text-ink">
+                    {AUCTION_RULES.categoryLimits[c].max}
+                  </td>
+                  <td className="tabular py-3 text-right font-semibold text-cream">
+                    {formatMoney(AUCTION_RULES.minBidAmount[c])}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
       </div>
-    </div>
+
+      {isEditable && (
+        <section
+          aria-labelledby="admin-heading"
+          className="mt-16 flex flex-wrap items-center justify-between gap-4 rounded-md border border-ball/40 px-5 py-4"
+        >
+          <div>
+            <h2 id="admin-heading" className="font-semibold text-ink">Reset the auction</h2>
+            <p className="text-sm text-ink-2">
+              Deletes every sale and puts every player back in the pool. Players and registrations stay.
+            </p>
+          </div>
+          <Button variant="danger-quiet" onClick={() => { setResetText(''); setShowReset(true); }}>
+            <RotateCcw />
+            Reset…
+          </Button>
+        </section>
+      )}
+
+      <Dialog open={showReset} onOpenChange={open => !isResetting && setShowReset(open)}>
+        <DialogContent className="max-w-md" onClose={() => setShowReset(false)}>
+          <DialogHeader>
+            <DialogTitle>Reset everything?</DialogTitle>
+            <DialogDescription>
+              All {sold} sales are deleted, every purse goes back to {formatMoney(AUCTION_RULES.teamPurse)},
+              and every player goes back in the pool. This can’t be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <form
+            className="mt-5"
+            onSubmit={e => {
+              e.preventDefault();
+              if (resetText === 'RESET') handleReset();
+            }}
+          >
+            <Field id="reset-confirm" label="Type RESET to confirm">
+              <Input
+                id="reset-confirm"
+                data-autofocus
+                autoComplete="off"
+                value={resetText}
+                onChange={e => setResetText(e.target.value)}
+              />
+            </Field>
+            <DialogFooter>
+              <Button variant="ghost" onClick={() => setShowReset(false)} disabled={isResetting}>
+                Cancel
+              </Button>
+              <Button type="submit" variant="danger" disabled={resetText !== 'RESET' || isResetting}>
+                {isResetting && <Loader2 className="animate-spin" />}
+                Reset auction
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </AppShell>
   );
 }

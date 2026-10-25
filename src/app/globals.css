@@ -4,56 +4,123 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
+    color-scheme: dark;
+
+    /* Ground — the night sky over the ground in the SCL logo */
+    --night: #0a0f2c;
+    --night-2: #10173d;
+    --night-3: #18215a;
+    --rule: #252e66;
+    --rule-strong: #3a4590;
+
+    /* Ink */
+    --ink: #f1f2fa;
+    --ink-2: #b4bbdd;
+    --ink-3: #8a92c0;
+
+    /* Logo colours */
+    --floodlight: #e8317f;
+    --floodlight-strong: #c81b68;
+    --violet: #5b2a9e;
+    --ball: #e0313a;
+    --turf: #7ed957;
+    --ribbon: #f07a2b;
+    --cream: #f7e6b5;
+
+    /* Category inks — always paired with a written label */
+    --cat-legend: #ff5aa8;
+    --cat-youngstar: #7ed957;
+    --cat-gold: #f5c542;
+    --cat-silver: #c3cce8;
+    --cat-bronze: #ff8a3d;
   }
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+  html {
+    background: var(--night);
+  }
+
+  body {
+    background-color: var(--night);
+    background-image: radial-gradient(
+        120% 60% at 50% -20%,
+        rgba(232, 49, 127, 0.22),
+        rgba(91, 42, 158, 0.12) 45%,
+        transparent 70%
+      );
+    background-repeat: no-repeat;
+    color: var(--ink);
+    font-feature-settings: "tnum" 0;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  * {
+    border-color: var(--rule);
+  }
+
+  ::selection {
+    background: var(--floodlight);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--cream);
+    outline-offset: 2px;
+  }
+
+  input,
+  select,
+  textarea {
+    caret-color: var(--floodlight);
+  }
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.85);
+  }
+
+  a {
+    text-underline-offset: 3px;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--rule-strong) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--rule-strong);
+    border-radius: 10px;
+    border: 2px solid var(--night);
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
+@layer utilities {
+  .tabular {
+    font-variant-numeric: tabular-nums;
   }
-  body {
-    @apply bg-background text-foreground;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 1ms !important;
   }
 }

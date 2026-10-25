@@ -1,5 +1,7 @@
 import { put, del } from '@vercel/blob';
 import { NextResponse } from 'next/server';
+import { mkdir, writeFile } from 'fs/promises';
+import path from 'path';
 
 const BLOB_TOKEN = process.env.AUCTION_BLOB_READ_WRITE_TOKEN;
 
@@ -11,8 +13,24 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Filename and body required' }, { status: 400 });
   }
 
+  // Photos only: an SVG or other file saved under a .jpg name shows as a broken image.
+  const type = request.headers.get('content-type') ?? '';
+  if (!/^image\/(jpeg|png|webp|heic|heif)$/.test(type)) {
+    return NextResponse.json({ error: 'Upload a JPG or PNG photo' }, { status: 415 });
+  }
+
+  // Local development without a Blob token: keep uploads in public/uploads.
+  if (!BLOB_TOKEN && process.env.NODE_ENV === 'development') {
+    const safe = `${Date.now()}-${filename.replace(/[^\w.-]+/g, '_')}`;
+    const dir = path.join(process.cwd(), 'public', 'uploads');
+    await mkdir(dir, { recursive: true });
+    await writeFile(path.join(dir, safe), Buffer.from(await request.arrayBuffer()));
+    return NextResponse.json({ url: `/uploads/${safe}` });
+  }
+
   try {
     const blob = await put(filename, request.body, {
+      addRandomSuffix: true,
       access: 'public',
       token: BLOB_TOKEN,
     });

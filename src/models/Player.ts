@@ -15,6 +15,9 @@ const PlayerSchema = new Schema<PlayerType>(
     teamId: { type: String },
     soldAmount: { type: Number },
     imageUrl: { type: String },
+    battingStyle: { type: String, enum: ['Left', 'Right'] },
+    bowlingStyle: { type: String, enum: ['Left', 'Right', 'None'] },
+    registrationId: { type: String },
   },
   {
     timestamps: true,
