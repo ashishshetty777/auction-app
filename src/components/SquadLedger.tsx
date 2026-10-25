@@ -36,6 +36,29 @@ interface LedgerProps {
 }
 
 export function SquadLedger(props: LedgerProps) {
+  if (props.teams.length === 0) {
+    const stage = props.size === 'stage';
+    return (
+      <div
+        className={cn(
+          'flex h-full flex-col items-center justify-center rounded-md border border-dashed border-rule-strong text-center',
+          stage ? 'min-h-[50vh] gap-[1.5vh] p-[4vh]' : 'gap-2 px-6 py-14',
+        )}
+      >
+        <p
+          className={cn(
+            'font-display font-black uppercase tracking-wide text-ink',
+            stage ? 'text-[clamp(2rem,4vw,4.5rem)]' : 'text-2xl',
+          )}
+        >
+          Teams to be announced
+        </p>
+        <p className={cn('text-ink-2', stage ? 'text-[clamp(1rem,1.5vw,1.8rem)]' : 'text-[15px]')}>
+          Squads appear here once the teams are set up.
+        </p>
+      </div>
+    );
+  }
   return (
     <>
       <LedgerGrid {...props} />
