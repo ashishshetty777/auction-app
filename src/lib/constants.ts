@@ -1,4 +1,31 @@
-import { AuctionRules } from "@/types";
+import { AuctionRules, PlayerCategory } from "@/types";
+
+// Season data — change these each season.
+export const SEASON = {
+  league: "Samriddhi Champions League",
+  short: "SCL",
+  season: 7,
+  year: 2027,
+  auctionDate: "17 Jan 2027",
+  // ISO auction day; ages on the registration form are worked out as of this date
+  auctionDay: "2027-01-17",
+  // As printed on the season emblem
+  emblemDate: "17th Jan, 2027",
+};
+
+// The society's buildings, as used by the registration form
+export const SOCIETY = {
+  wings: ["A-Wing", "B-Wing", "C-Wing", "D-Wing"],
+  floors: 20,
+  flatsPerFloor: 8,
+};
+
+export const REGISTRATION = {
+  fee: 1000,
+  tshirtSizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "Other"],
+  minAge: 8,
+  maxAge: 80,
+};
 
 export const AUCTION_RULES: AuctionRules = {
   totalTeams: 7,
@@ -31,42 +58,56 @@ export const TEAM_NAMES = [
   "SHREE SIDDHIVINAYAK STRIKERS",
 ];
 
-export const CATEGORY_COLORS: Record<string, string> = {
-  LEGEND: "bg-purple-100 text-purple-800 border-purple-300",
-  YOUNGSTAR: "bg-green-100 text-green-800 border-green-300",
-  GOLD: "bg-yellow-100 text-yellow-800 border-yellow-300",
-  SILVER: "bg-gray-100 text-gray-800 border-gray-300",
-  BRONZE: "bg-orange-100 text-orange-800 border-orange-300",
-};
+/** Squad order, top to bottom, used everywhere categories are listed. */
+export const CATEGORY_ORDER: PlayerCategory[] = [
+  "LEGEND",
+  "YOUNGSTAR",
+  "GOLD",
+  "SILVER",
+  "BRONZE",
+];
 
-export const CATEGORY_BG_COLORS: Record<string, string> = {
-  LEGEND: "bg-purple-500",
-  YOUNGSTAR: "bg-green-500",
-  GOLD: "bg-yellow-400",
-  SILVER: "bg-gray-400",
-  BRONZE: "bg-orange-500",
-};
-
-export const CATEGORY_BG_COLORS_HEX: Record<string, string> = {
-  LEGEND: "#a855f7",
-  YOUNGSTAR: "#22c55e",
-  GOLD: "#fbbf24",
-  SILVER: "#9ca3af",
-  BRONZE: "#f97316",
-};
-
-export const CATEGORY_TEXT_COLORS: Record<string, string> = {
-  LEGEND: "text-white",
-  YOUNGSTAR: "text-white",
-  GOLD: "text-gray-900",
-  SILVER: "text-white",
-  BRONZE: "text-white",
-};
-
-export const CATEGORY_TEXT_COLORS_HEX: Record<string, string> = {
-  LEGEND: "#ffffff",
-  YOUNGSTAR: "#ffffff",
-  GOLD: "#111827",
-  SILVER: "#ffffff",
-  BRONZE: "#ffffff",
+/**
+ * Category identity. `ink` is the category colour (text on night / fill behind
+ * night text); `wash` is the same colour at low strength for filled squad lines.
+ */
+export const CATEGORY_META: Record<
+  PlayerCategory,
+  { label: string; ink: string; wash: string; text: string; fill: string }
+> = {
+  LEGEND: {
+    label: "Legend",
+    ink: "var(--cat-legend)",
+    wash: "rgba(255, 90, 168, 0.16)",
+    text: "text-cat-legend",
+    fill: "bg-cat-legend",
+  },
+  YOUNGSTAR: {
+    label: "Youngstar",
+    ink: "var(--cat-youngstar)",
+    wash: "rgba(126, 217, 87, 0.14)",
+    text: "text-cat-youngstar",
+    fill: "bg-cat-youngstar",
+  },
+  GOLD: {
+    label: "Gold",
+    ink: "var(--cat-gold)",
+    wash: "rgba(245, 197, 66, 0.15)",
+    text: "text-cat-gold",
+    fill: "bg-cat-gold",
+  },
+  SILVER: {
+    label: "Silver",
+    ink: "var(--cat-silver)",
+    wash: "rgba(195, 204, 232, 0.13)",
+    text: "text-cat-silver",
+    fill: "bg-cat-silver",
+  },
+  BRONZE: {
+    label: "Bronze",
+    ink: "var(--cat-bronze)",
+    wash: "rgba(255, 138, 61, 0.15)",
+    text: "text-cat-bronze",
+    fill: "bg-cat-bronze",
+  },
 };

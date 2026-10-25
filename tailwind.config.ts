@@ -1,53 +1,85 @@
 import type { Config } from "tailwindcss";
 
+// Theme colours live in CSS variables as hex, which Tailwind can't add alpha to.
+// color-mix makes opacity modifiers such as bg-night/85 work.
+const v = (name: string) =>
+  `color-mix(in srgb, var(--${name}) calc(<alpha-value> * 100%), transparent)`;
+
 const config: Config = {
-  darkMode: ["class"],
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/lib/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/providers/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+        // Night-stadium ground and panels, taken from the SCL logo
+        night: {
+          DEFAULT: v("night"),
+          2: v("night-2"),
+          3: v("night-3"),
         },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+        rule: {
+          DEFAULT: v("rule"),
+          strong: v("rule-strong"),
         },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
+        ink: {
+          DEFAULT: v("ink"),
+          2: v("ink-2"),
+          3: v("ink-3"),
         },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+        floodlight: v("floodlight"),
+        "floodlight-strong": v("floodlight-strong"),
+        violet: v("violet"),
+        ball: v("ball"),
+        turf: v("turf"),
+        ribbon: v("ribbon"),
+        cream: v("cream"),
+        cat: {
+          legend: v("cat-legend"),
+          youngstar: v("cat-youngstar"),
+          gold: v("cat-gold"),
+          silver: v("cat-silver"),
+          bronze: v("cat-bronze"),
         },
       },
+      fontFamily: {
+        display: ["var(--font-display)", "system-ui", "sans-serif"],
+        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        condensed: ["var(--font-condensed)", "var(--font-sans)", "sans-serif"],
+      },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        DEFAULT: "4px",
+        md: "6px",
+        lg: "10px",
+      },
+      keyframes: {
+        "stamp-in": {
+          "0%": { opacity: "0", transform: "scale(1.9) rotate(-14deg)", filter: "blur(6px)" },
+          "60%": { opacity: "1", transform: "scale(0.94) rotate(-8deg)", filter: "blur(0)" },
+          "100%": { opacity: "1", transform: "scale(1) rotate(-8deg)" },
+        },
+        "rise-in": {
+          "0%": { opacity: "0", transform: "translateY(16px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "toast-in": {
+          "0%": { opacity: "0", transform: "translateY(8px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "ink-settle": {
+          "0%, 30%": { backgroundColor: "var(--settle-from)" },
+          "100%": { backgroundColor: "var(--settle-to)" },
+        },
+      },
+      animation: {
+        "stamp-in": "stamp-in 520ms cubic-bezier(0.16, 1, 0.3, 1) both",
+        "rise-in": "rise-in 600ms cubic-bezier(0.16, 1, 0.3, 1) both",
+        "toast-in": "toast-in 220ms cubic-bezier(0.16, 1, 0.3, 1) both",
+        "ink-settle": "ink-settle 3s cubic-bezier(0.33, 1, 0.68, 1) both",
       },
     },
   },

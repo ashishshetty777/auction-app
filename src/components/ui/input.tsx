@@ -1,6 +1,9 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
+export const fieldClass =
+  "flex h-11 w-full rounded border border-rule-strong bg-night px-3 text-[15px] text-ink placeholder:text-ink-3 transition-colors hover:border-ink-3 focus-visible:border-cream focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 aria-[invalid=true]:border-ball";
+
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {}
 
@@ -10,7 +13,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <input
         type={type}
         className={cn(
-          "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+          fieldClass,
+          "file:mr-3 file:rounded file:border-0 file:bg-night-3 file:px-3 file:py-1.5 file:text-sm file:font-semibold file:text-ink",
+          type === "file" && "h-auto py-2",
           className
         )}
         ref={ref}
@@ -21,4 +26,39 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 );
 Input.displayName = "Input";
 
-export { Input };
+/** Label + control + optional hint/error, wired with htmlFor/aria. */
+function Field({
+  id,
+  label,
+  hint,
+  error,
+  children,
+  className,
+}: {
+  id: string;
+  label: string;
+  hint?: React.ReactNode;
+  error?: string | null;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cn("grid gap-1.5", className)}>
+      <label htmlFor={id} className="text-sm font-semibold text-ink-2">
+        {label}
+      </label>
+      {children}
+      {error ? (
+        <p id={`${id}-error`} className="text-sm text-[#ff8a90]">
+          {error}
+        </p>
+      ) : hint ? (
+        <p id={`${id}-hint`} className="text-sm text-ink-3">
+          {hint}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+export { Input, Field };

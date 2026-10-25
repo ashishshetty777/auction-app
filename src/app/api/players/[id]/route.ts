@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Player from '@/models/Player';
+import Registration from '@/models/Registration';
 
 export async function GET(
   request: NextRequest,
@@ -87,12 +88,21 @@ export async function DELETE(
   try {
     const { id } = await params;
     await connectDB();
-    const player = await Player.findOneAndDelete({ id }).lean();
+    const player = await Player.findOneAndDelete({ id }).lean<{ registrationId?: string }>();
 
     if (!player) {
       return NextResponse.json(
         { success: false, error: 'Player not found' },
         { status: 404 }
+      );
+    }
+
+    // A player who came from the registration form goes back to that list,
+    // so an admin can re-add or delete them there.
+    if (player.registrationId) {
+      await Registration.updateOne(
+        { id: player.registrationId },
+        { $set: { status: 'PENDING' }, $unset: { playerId: '' } }
       );
     }
 

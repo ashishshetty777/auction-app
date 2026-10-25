@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { Player, Team, CurrentAuction, LastSale } from '@/types';
 import { AUCTION_RULES } from './constants';
 
@@ -19,6 +19,7 @@ interface AuctionContextType {
     amount: number,
   ) => Promise<boolean>;
   getMaxBid: (teamId: string, category: Player['category']) => number;
+  isLive: boolean;
   lastSale: LastSale | null;
   reverseLastSale: () => Promise<boolean>;
   removePlayerFromTeam: (playerId: string) => Promise<boolean>;
@@ -37,13 +38,19 @@ export function AuctionProvider({ children }: { children: React.ReactNode }) {
     biddingTeamId: null,
   });
   const [lastSale, setLastSale] = useState<LastSale | null>(null);
+  const [isLive, setIsLive] = useState(true);
+  const revisionRef = useRef<string | null>(null);
+  const pendingStateWrite = useRef(0);
+  // Count of in-flight multi-step writes (sale, undo, delete); polling
+  // must not refetch mid-write or it can load a half-applied squad.
+  const busyWrites = useRef(0);
 
   // Fetch data from API
-  const fetchData = async () => {
+  const fetchData = async (silent = false) => {
     if (typeof window === 'undefined') return;
 
     try {
-      setLoading(true);
+      if (!silent) setLoading(true);
       const [playersRes, teamsRes, lastSaleRes] = await Promise.all([
         fetch('/api/players'),
         fetch('/api/teams'),
@@ -77,6 +84,68 @@ export function AuctionProvider({ children }: { children: React.ReactNode }) {
       fetchData();
     }
   }, []);
+
+  // Keep every screen (admin, stage, phones) in step: poll the small
+  // auction-state endpoint and refetch full data only when squads changed.
+  useEffect(() => {
+    let cancelled = false;
+
+    const poll = async () => {
+      try {
+        const res = await fetch('/api/auction-state', { cache: 'no-store' });
+        const json = await res.json();
+        if (cancelled || !json.success) return;
+        setIsLive(true);
+
+        const { playerId, lastSale: latestSale, revision } = json.data;
+
+        if (pendingStateWrite.current === 0) {
+          setCurrentAuction(prev =>
+            prev.playerId === playerId
+              ? prev
+              : { playerId, currentBid: 0, biddingTeamId: null },
+          );
+        }
+
+        setLastSale(prev =>
+          (prev?.timestamp ?? null) === (latestSale?.timestamp ?? null)
+            ? prev
+            : latestSale,
+        );
+
+        if (busyWrites.current > 0) return;
+        if (revisionRef.current !== null && revisionRef.current !== revision) {
+          fetchData(true);
+        }
+        revisionRef.current = revision;
+      } catch {
+        if (!cancelled) setIsLive(false);
+      }
+    };
+
+    poll();
+    const interval = setInterval(poll, 2000);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const writeAuctionState = async (playerId: string | null) => {
+    pendingStateWrite.current += 1;
+    try {
+      await fetch('/api/auction-state', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ playerId }),
+      });
+    } catch (error) {
+      console.error('Error updating auction state:', error);
+    } finally {
+      pendingStateWrite.current -= 1;
+    }
+  };
 
   const refreshData = async () => {
     await fetchData();
@@ -148,6 +217,7 @@ export function AuctionProvider({ children }: { children: React.ReactNode }) {
       currentBid: player ? AUCTION_RULES.minBidAmount[player.category] : 0,
       biddingTeamId: null,
     });
+    writeAuctionState(playerId);
   };
 
   const getMaxBid = (teamId: string, category: Player['category']): number => {
@@ -233,7 +303,7 @@ export function AuctionProvider({ children }: { children: React.ReactNode }) {
     return Math.max(0, availableForThisPlayer);
   };
 
-  const addPlayerToTeam = async (
+  const addPlayerToTeamUnguarded = async (
     playerId: string,
     teamId: string,
     amount: number,
@@ -312,6 +382,7 @@ export function AuctionProvider({ children }: { children: React.ReactNode }) {
         currentBid: 0,
         biddingTeamId: null,
       });
+      writeAuctionState(null);
 
       return true;
     } catch (error) {
@@ -320,7 +391,7 @@ export function AuctionProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const reverseLastSale = async (): Promise<boolean> => {
+  const reverseLastSaleUnguarded = async (): Promise<boolean> => {
     if (!lastSale) return false;
 
     const player = players.find(p => p.id === lastSale.playerId);
@@ -399,7 +470,7 @@ export function AuctionProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const removePlayerFromTeam = async (playerId: string): Promise<boolean> => {
+  const removePlayerFromTeamUnguarded = async (playerId: string): Promise<boolean> => {
     const player = players.find(p => p.id === playerId);
     if (!player || !player.teamId) return false;
 
@@ -472,6 +543,20 @@ export function AuctionProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const guarded =
+    <A extends unknown[]>(fn: (...args: A) => Promise<boolean>) =>
+    async (...args: A) => {
+      busyWrites.current += 1;
+      try {
+        return await fn(...args);
+      } finally {
+        busyWrites.current -= 1;
+      }
+    };
+  const addPlayerToTeam = guarded(addPlayerToTeamUnguarded);
+  const reverseLastSale = guarded(reverseLastSaleUnguarded);
+  const removePlayerFromTeam = guarded(removePlayerFromTeamUnguarded);
+
   return (
     <AuctionContext.Provider
       value={{
@@ -485,6 +570,7 @@ export function AuctionProvider({ children }: { children: React.ReactNode }) {
         setCurrentAuctionPlayer,
         addPlayerToTeam,
         getMaxBid,
+        isLive,
         lastSale,
         reverseLastSale,
         removePlayerFromTeam,

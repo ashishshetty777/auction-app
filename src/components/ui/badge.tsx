@@ -1,35 +1,59 @@
 import * as React from "react";
-import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
+import { CATEGORY_META } from "@/lib/constants";
+import { PlayerCategory } from "@/types";
 
-const badgeVariants = cva(
-  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
-  {
-    variants: {
-      variant: {
-        default:
-          "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
-        secondary:
-          "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        destructive:
-          "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
-        outline: "text-foreground",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-    },
-  }
-);
-
-export interface BadgeProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof badgeVariants> {}
-
-function Badge({ className, variant, ...props }: BadgeProps) {
+/** Category tag: a solid ink chip with night text. The label is always written out. */
+function CategoryTag({
+  category,
+  size = "sm",
+  className,
+}: {
+  category: PlayerCategory;
+  size?: "sm" | "md" | "lg" | "stage";
+  className?: string;
+}) {
+  const meta = CATEGORY_META[category];
   return (
-    <div className={cn(badgeVariants({ variant }), className)} {...props} />
+    <span
+      className={cn(
+        "inline-flex items-center rounded-[3px] font-display font-bold uppercase leading-none tracking-[0.08em] text-night",
+        meta.fill,
+        size === "sm" && "h-5 px-1.5 text-[12px]",
+        size === "md" && "h-7 px-2.5 text-[15px]",
+        size === "lg" && "h-9 px-3 text-xl",
+        size === "stage" && "h-[clamp(2.5rem,4vw,4.5rem)] px-[0.6em] text-[clamp(1.5rem,2.6vw,3rem)]",
+        className
+      )}
+    >
+      {meta.label}
+    </span>
   );
 }
 
-export { Badge, badgeVariants };
+/** Small quiet status pill. */
+function StatusPill({
+  tone = "neutral",
+  className,
+  children,
+}: {
+  tone?: "neutral" | "sold" | "live";
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <span
+      className={cn(
+        "inline-flex h-6 items-center gap-1.5 rounded-full border px-2.5 text-[12px] font-semibold uppercase tracking-[0.08em]",
+        tone === "neutral" && "border-rule-strong text-ink-2",
+        tone === "sold" && "border-ball/60 bg-ball/15 text-[#ff9aa0]",
+        tone === "live" && "border-turf/50 bg-turf/10 text-turf",
+        className
+      )}
+    >
+      {children}
+    </span>
+  );
+}
+
+export { CategoryTag, StatusPill };

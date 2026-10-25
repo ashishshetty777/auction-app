@@ -1,0 +1,611 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-25T06:36:03+00:00",
+  "title": "Design System: SCL Player Auction",
+  "extensions": {
+    "colorMeta": {
+      "night": {
+        "role": "neutral",
+        "displayName": "Night",
+        "canonical": "#0a0f2c",
+        "oklch": "oklch(18.4% 0.059 272)",
+        "tonalRamp": [
+          "#050723",
+          "#1b2241",
+          "#374061",
+          "#555f83",
+          "#7681a6",
+          "#98a3cb",
+          "#bbc8f0",
+          "#e9eeff"
+        ]
+      },
+      "night-2": {
+        "role": "neutral",
+        "displayName": "Night Panel",
+        "canonical": "#10173d",
+        "oklch": "oklch(22.4% 0.073 271)",
+        "tonalRamp": [
+          "#040529",
+          "#192148",
+          "#343f69",
+          "#525f8b",
+          "#7280af",
+          "#94a3d4",
+          "#b8c7fa",
+          "#e9eefe"
+        ]
+      },
+      "night-3": {
+        "role": "neutral",
+        "displayName": "Night Banner",
+        "canonical": "#18215a",
+        "oklch": "oklch(27.9% 0.102 271)",
+        "tonalRamp": [
+          "#040035",
+          "#151d56",
+          "#2f3c78",
+          "#4c5c9b",
+          "#6c7ec0",
+          "#8ea1e6",
+          "#b6c7fe",
+          "#e9eefe"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#252e66",
+        "oklch": "oklch(32.7% 0.098 273)",
+        "tonalRamp": [
+          "#050033",
+          "#171d54",
+          "#313c76",
+          "#4f5c99",
+          "#6f7ebd",
+          "#90a1e3",
+          "#b8c7fc",
+          "#e9eeff"
+        ]
+      },
+      "rule-strong": {
+        "role": "neutral",
+        "displayName": "Strong Rule",
+        "canonical": "#3a4590",
+        "oklch": "oklch(42.3% 0.123 274)",
+        "tonalRamp": [
+          "#060036",
+          "#17175f",
+          "#2f3882",
+          "#4c59a6",
+          "#6b7bcc",
+          "#8d9ff2",
+          "#b8c6ff",
+          "#e9eeff"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Floodlit Ink",
+        "canonical": "#f1f2fa",
+        "oklch": "oklch(96.3% 0.011 280)",
+        "tonalRamp": [
+          "#0a0b10",
+          "#24252a",
+          "#414148",
+          "#606167",
+          "#818289",
+          "#a3a4ac",
+          "#c7c8d0",
+          "#edeef6"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Muted Ink",
+        "canonical": "#b4bbdd",
+        "oklch": "oklch(79.8% 0.049 276)",
+        "tonalRamp": [
+          "#07081f",
+          "#1f233d",
+          "#3b405c",
+          "#595f7d",
+          "#7a80a0",
+          "#9ca3c4",
+          "#c0c7ea",
+          "#eaeefe"
+        ]
+      },
+      "ink-3": {
+        "role": "neutral",
+        "displayName": "Faint Ink",
+        "canonical": "#8a92c0",
+        "oklch": "oklch(67.0% 0.069 277)",
+        "tonalRamp": [
+          "#060527",
+          "#1d2046",
+          "#393e66",
+          "#575e88",
+          "#777fac",
+          "#99a2d1",
+          "#bdc6f6",
+          "#eaedff"
+        ]
+      },
+      "floodlight": {
+        "role": "primary",
+        "displayName": "Floodlight Magenta",
+        "canonical": "#e8317f",
+        "oklch": "oklch(62.2% 0.222 1)",
+        "tonalRamp": [
+          "#210009",
+          "#490122",
+          "#7a083d",
+          "#ae155b",
+          "#e22a7a",
+          "#ff699e",
+          "#feafc5",
+          "#fee8ed"
+        ]
+      },
+      "floodlight-strong": {
+        "role": "primary",
+        "displayName": "Floodlight Deep",
+        "canonical": "#c81b68",
+        "oklch": "oklch(54.7% 0.208 2)",
+        "tonalRamp": [
+          "#210009",
+          "#4a0021",
+          "#7b053c",
+          "#af1059",
+          "#de3679",
+          "#fa6f9d",
+          "#fbb1c5",
+          "#ffe8ed"
+        ]
+      },
+      "violet": {
+        "role": "primary",
+        "displayName": "Logo Violet",
+        "canonical": "#5b2a9e",
+        "oklch": "oklch(42.0% 0.176 297)",
+        "tonalRamp": [
+          "#11002b",
+          "#30045d",
+          "#501b91",
+          "#6f42b6",
+          "#9065dc",
+          "#b18cfc",
+          "#cfbdfd",
+          "#f0ebfe"
+        ]
+      },
+      "ball": {
+        "role": "secondary",
+        "displayName": "Ball Red",
+        "canonical": "#e0313a",
+        "oklch": "oklch(59.4% 0.210 24)",
+        "tonalRamp": [
+          "#210000",
+          "#4d0007",
+          "#7f0414",
+          "#b50e23",
+          "#e5373e",
+          "#fb7671",
+          "#fbb4af",
+          "#fee9e7"
+        ]
+      },
+      "ball-soft": {
+        "role": "secondary",
+        "displayName": "Ball Pink",
+        "canonical": "#ff8a90",
+        "oklch": "oklch(76.3% 0.142 18)",
+        "tonalRamp": [
+          "#220002",
+          "#4d000f",
+          "#7c0d24",
+          "#a23642",
+          "#c95a62",
+          "#f07d83",
+          "#fcb3b4",
+          "#ffe8e8"
+        ],
+        "note": "Hard-coded literal #ff8a90 in components; not yet a CSS custom property."
+      },
+      "turf": {
+        "role": "secondary",
+        "displayName": "Turf Green",
+        "canonical": "#7ed957",
+        "oklch": "oklch(80.1% 0.188 137)",
+        "tonalRamp": [
+          "#001000",
+          "#0e2d00",
+          "#1f4f02",
+          "#317309",
+          "#48991c",
+          "#65bf3b",
+          "#89e563",
+          "#d0febf"
+        ]
+      },
+      "cream": {
+        "role": "secondary",
+        "displayName": "Scorebook Cream",
+        "canonical": "#f7e6b5",
+        "oklch": "oklch(92.7% 0.066 91)",
+        "tonalRamp": [
+          "#120a00",
+          "#2f2400",
+          "#4f4012",
+          "#6f6033",
+          "#918154",
+          "#b4a475",
+          "#d9c898",
+          "#ffeebc"
+        ]
+      },
+      "cat-legend": {
+        "role": "tertiary",
+        "displayName": "Legend Pink",
+        "canonical": "#ff5aa8",
+        "oklch": "oklch(70.8% 0.212 355)",
+        "tonalRamp": [
+          "#20000d",
+          "#490028",
+          "#790546",
+          "#ad0f67",
+          "#db3689",
+          "#fe67ac",
+          "#feaecd",
+          "#fee8ef"
+        ]
+      },
+      "cat-youngstar": {
+        "role": "tertiary",
+        "displayName": "Youngstar Turf",
+        "canonical": "#7ed957",
+        "oklch": "oklch(80.1% 0.188 137)",
+        "tonalRamp": [
+          "#001000",
+          "#0e2d00",
+          "#1f4f02",
+          "#317309",
+          "#48991c",
+          "#65bf3b",
+          "#89e563",
+          "#d0febf"
+        ]
+      },
+      "cat-gold": {
+        "role": "tertiary",
+        "displayName": "Gold",
+        "canonical": "#f5c542",
+        "oklch": "oklch(84.4% 0.151 88)",
+        "tonalRamp": [
+          "#130900",
+          "#302300",
+          "#533f00",
+          "#795d03",
+          "#a07d16",
+          "#c99f21",
+          "#f2c23f",
+          "#feedc5"
+        ]
+      },
+      "cat-silver": {
+        "role": "tertiary",
+        "displayName": "Steel Silver",
+        "canonical": "#c3cce8",
+        "oklch": "oklch(84.7% 0.040 271)",
+        "tonalRamp": [
+          "#06091c",
+          "#1e2439",
+          "#3a4158",
+          "#596079",
+          "#79819b",
+          "#9ca4bf",
+          "#bfc8e4",
+          "#e9eefe"
+        ]
+      },
+      "cat-bronze": {
+        "role": "tertiary",
+        "displayName": "Bronze Orange",
+        "canonical": "#ff8a3d",
+        "oklch": "oklch(75.0% 0.167 51)",
+        "tonalRamp": [
+          "#1c0300",
+          "#3f1800",
+          "#6a2e00",
+          "#994600",
+          "#c86111",
+          "#f58132",
+          "#ffb68d",
+          "#feeadf"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Stage player name, SOLD team name and amount, home league name. Big Shoulders 900, uppercase, vw clamps."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Page section heads (Teams, Squad rules) and empty-state titles."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Team names in ledger headers and team keys; dialog titles."
+      },
+      "section-label": {
+        "displayName": "Section label",
+        "purpose": "Real region headings (On the block, Squads), ledger row-group names, the Season lexicon line. Tracked caps 0.12–0.16em."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Sentences, descriptions, hints. Barlow 15px."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Field labels, legends, table heads; sentence case, muted ink."
+      },
+      "numeral": {
+        "displayName": "Numeral",
+        "purpose": "Every columned number; tabular figures opt-in via .tabular (body sets tnum off)."
+      },
+      "ledger-entry": {
+        "displayName": "Ledger entry",
+        "purpose": "Scorebook names (D. Chaudhari) in ledger cells; Barlow Condensed."
+      }
+    },
+    "shadows": [
+      {
+        "name": "overlay",
+        "value": "0 30px 80px -20px rgba(0,0,0,0.8)",
+        "purpose": "Dialogs; scrim #05081c at 80% with 2px blur."
+      },
+      {
+        "name": "toast",
+        "value": "0 16px 40px -12px rgba(0,0,0,0.8)",
+        "purpose": "Toasts."
+      },
+      {
+        "name": "stage-photo",
+        "value": "0 40px 90px -30px rgba(0,0,0,0.9)",
+        "purpose": "On-stage portrait, with 1px rule-strong ring."
+      },
+      {
+        "name": "floodlight-glow",
+        "value": "0 6px 20px -8px rgba(232,49,127,0.7)",
+        "purpose": "Primary button under-glow."
+      },
+      {
+        "name": "ball-glow",
+        "value": "0 6px 20px -8px rgba(224,49,58,0.7)",
+        "purpose": "Danger button under-glow."
+      },
+      {
+        "name": "logo-glow",
+        "value": "0 30px 70px -25px rgba(232,49,127,0.55)",
+        "purpose": "League logo on home."
+      },
+      {
+        "name": "stamp-inner",
+        "value": "inset 0 0 0 0.4vh rgba(224,49,58,0.35)",
+        "purpose": "Doubled inner rule of the SOLD stamp."
+      },
+      {
+        "name": "banner-underline",
+        "value": "inset 0 -0.5vh 0 rgba(232,49,127,0.55)",
+        "purpose": "Magenta underline inset on the SOLD team banner."
+      },
+      {
+        "name": "floodlight-sky",
+        "value": "radial-gradient(120% 60% at 50% -20%, rgba(232,49,127,0.22), rgba(91,42,158,0.12) 45%, transparent 70%)",
+        "purpose": "Body background: the top-edge floodlight. Stage uses twin magenta lamps at 12%/88% plus a violet centre."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Entrances: stamp-in, rise-in, toast-in."
+      },
+      {
+        "name": "stamp-in",
+        "value": "520ms ease-out-expo; scale 1.9 rotate -14deg blur 6px -> scale .94 rotate -8deg (60%) -> scale 1 rotate -8deg",
+        "purpose": "SOLD stamp landing."
+      },
+      {
+        "name": "rise-in",
+        "value": "600ms ease-out-expo; translateY(16px) + fade",
+        "purpose": "Stage photo and name block (name delayed 120ms); dialogs."
+      },
+      {
+        "name": "toast-in",
+        "value": "220ms ease-out-expo; translateY(8px) + fade",
+        "purpose": "Toasts."
+      },
+      {
+        "name": "sold-hold",
+        "value": "6000ms",
+        "purpose": "SOLD takeover hold on stage before the ledger returns."
+      },
+      {
+        "name": "ink-settle",
+        "value": "3s cubic-bezier(0.33, 1, 0.68, 1); holds rgba(232,49,127,0.55) for 0–30%, then eases to the category wash",
+        "purpose": "Fresh ledger entry settling into its column after SOLD."
+      },
+      {
+        "name": "state",
+        "value": "150ms",
+        "purpose": "Colour/border transitions on buttons, fields, keys."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "all animation/transition durations -> 1ms",
+        "purpose": "prefers-reduced-motion: reduce."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px",
+        "note": "Ledger grid replaces the phone stack; console splits to two columns."
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one commit action per view (Record sale, Go to the auction).",
+      "html": "<button class=\"ds-btn-primary\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m14 13-7.5 7.5a2.12 2.12 0 0 1-3-3L11 10\"/><path d=\"m16 16 6-6\"/><path d=\"m8 8 6-6\"/><path d=\"m9 7 8 8\"/><path d=\"m21 11-8-8\"/></svg>Record sale</button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:56px;padding:0 24px;border:0;border-radius:4px;background:var(--floodlight-strong,#c81b68);color:#fff;font-family:Barlow,system-ui,sans-serif;font-weight:600;font-size:16px;letter-spacing:0.025em;box-shadow:0 6px 20px -8px rgba(232,49,127,0.7);cursor:pointer;transition:background-color 150ms,box-shadow 150ms}.ds-btn-primary:hover{background:var(--floodlight,#e8317f)}.ds-btn-primary:active{background:var(--floodlight-strong,#c81b68)}.ds-btn-primary:focus-visible{outline:2px solid var(--cream,#f7e6b5);outline-offset:2px}.ds-btn-primary:disabled{opacity:.45;cursor:not-allowed}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Default button: night banner fill, strong-rule border.",
+      "html": "<button class=\"ds-btn-secondary\">Open the stage</button>",
+      "css": ".ds-btn-secondary{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 16px;border:1px solid var(--rule-strong,#3a4590);border-radius:4px;background:var(--night-3,#18215a);color:var(--ink,#f1f2fa);font-family:Barlow,system-ui,sans-serif;font-weight:600;font-size:15px;letter-spacing:0.025em;cursor:pointer;transition:background-color 150ms,border-color 150ms}.ds-btn-secondary:hover{background:#1f2a6b;border-color:var(--ink-3,#8a92c0)}.ds-btn-secondary:focus-visible{outline:2px solid var(--cream,#f7e6b5);outline-offset:2px}"
+    },
+    {
+      "name": "Danger Button",
+      "kind": "button",
+      "refersTo": "button-danger",
+      "description": "Confirms a destructive action inside a dialog; danger-quiet opens it.",
+      "html": "<button class=\"ds-btn-danger\">Reset auction</button> <button class=\"ds-btn-danger-quiet\">Reset…</button>",
+      "css": ".ds-btn-danger,.ds-btn-danger-quiet{display:inline-flex;align-items:center;height:44px;padding:0 16px;border-radius:4px;font-family:Barlow,system-ui,sans-serif;font-weight:600;font-size:15px;letter-spacing:0.025em;cursor:pointer;transition:background-color 150ms,border-color 150ms}.ds-btn-danger{border:0;background:var(--ball,#e0313a);color:#fff;box-shadow:0 6px 20px -8px rgba(224,49,58,0.7)}.ds-btn-danger:hover{background:#ef3f48}.ds-btn-danger-quiet{background:transparent;border:1px solid rgba(224,49,58,0.5);color:#ff8a90}.ds-btn-danger-quiet:hover{background:rgba(224,49,58,0.15);border-color:var(--ball,#e0313a)}.ds-btn-danger:focus-visible,.ds-btn-danger-quiet:focus-visible{outline:2px solid var(--cream,#f7e6b5);outline-offset:2px}"
+    },
+    {
+      "name": "Hammer Price Field",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Night well field; cream stroke on focus; rupee prefix and Lakh suffix on the hammer price.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field-label\">Hammer price</span><span class=\"ds-field-wrap\"><span class=\"ds-field-pre\">₹</span><input class=\"ds-input\" inputmode=\"decimal\" value=\"42\"><span class=\"ds-field-suf\">Lakh</span></span><span class=\"ds-field-hint\">Base ₹15 L · pick the team first</span></label>",
+      "css": ".ds-field{display:grid;gap:6px;font-family:Barlow,system-ui,sans-serif}.ds-field-label{font-size:14px;font-weight:600;color:var(--ink-2,#b4bbdd)}.ds-field-wrap{position:relative;display:block}.ds-input{box-sizing:border-box;width:100%;height:56px;padding:0 64px 0 32px;border:1px solid var(--rule-strong,#3a4590);border-radius:4px;background:var(--night,#0a0f2c);color:var(--ink,#f1f2fa);font:600 24px Barlow,system-ui,sans-serif;font-variant-numeric:tabular-nums;caret-color:var(--floodlight,#e8317f);transition:border-color 150ms}.ds-input:hover{border-color:var(--ink-3,#8a92c0)}.ds-input:focus-visible{outline:none;border-color:var(--cream,#f7e6b5)}.ds-input[aria-invalid=true]{border-color:var(--ball,#e0313a)}.ds-field-pre,.ds-field-suf{position:absolute;top:50%;transform:translateY(-50%);color:var(--ink-3,#8a92c0);font-weight:600}.ds-field-pre{left:12px;font-size:18px}.ds-field-suf{right:12px;font-size:15px}.ds-field-hint{font-size:14px;color:var(--ink-3,#8a92c0)}"
+    },
+    {
+      "name": "Header Navigation",
+      "kind": "nav",
+      "refersTo": null,
+      "description": "Sticky translucent night header; active link gets a floodlight underline on the header rule.",
+      "html": "<header class=\"ds-nav\"><span class=\"ds-nav-mark\">SCL</span><span class=\"ds-nav-season\">Season 6</span><a class=\"ds-nav-link is-active\" href=\"#\" aria-current=\"page\">Auction</a><a class=\"ds-nav-link\" href=\"#\">Players</a><span class=\"ds-nav-live\"><i></i>Live</span></header>",
+      "css": ".ds-nav{display:flex;align-items:center;gap:8px;height:64px;padding:0 24px;background:rgba(10,15,44,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--rule,#252e66);font-family:Barlow,system-ui,sans-serif}.ds-nav-mark{font:900 28px/1 'Big Shoulders Display',sans-serif;letter-spacing:0.025em;color:var(--ink,#f1f2fa)}.ds-nav-season{margin-right:16px;font:700 14px 'Big Shoulders Display',sans-serif;text-transform:uppercase;letter-spacing:0.14em;color:var(--cream,#f7e6b5)}.ds-nav-link{position:relative;display:flex;align-items:center;height:40px;padding:0 12px;border-radius:4px;font-size:15px;font-weight:600;color:var(--ink-2,#b4bbdd);text-decoration:none;transition:color 150ms}.ds-nav-link:hover,.ds-nav-link.is-active{color:var(--ink,#f1f2fa)}.ds-nav-link.is-active::after{content:'';position:absolute;left:12px;right:12px;bottom:-13px;height:2px;background:var(--floodlight,#e8317f)}.ds-nav-link:focus-visible{outline:2px solid var(--cream,#f7e6b5);outline-offset:2px}.ds-nav-live{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500;color:var(--ink-2,#b4bbdd)}.ds-nav-live i{width:8px;height:8px;border-radius:50%;background:var(--turf,#7ed957);box-shadow:0 0 0 3px rgba(126,217,87,0.18)}"
+    },
+    {
+      "name": "Category Tag and Filter Chips",
+      "kind": "chip",
+      "refersTo": "category-tag",
+      "description": "Solid ink tag with the label written out; filter chips pair a swatch with the label and count, cream when on.",
+      "html": "<span class=\"ds-tag\" style=\"background:#f5c542\">Gold</span> <span class=\"ds-tag\" style=\"background:#ff5aa8\">Legend</span> <button class=\"ds-chip is-on\" aria-pressed=\"true\">All <span class=\"ds-chip-n\">96</span></button> <button class=\"ds-chip\" aria-pressed=\"false\"><i style=\"background:#c3cce8\"></i>Silver <span class=\"ds-chip-n\">31</span></button>",
+      "css": ".ds-tag{display:inline-flex;align-items:center;height:28px;padding:0 10px;border-radius:3px;font:700 15px/1 'Big Shoulders Display',sans-serif;text-transform:uppercase;letter-spacing:0.08em;color:var(--night,#0a0f2c)}.ds-chip{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border-radius:9999px;border:1px solid var(--rule-strong,#3a4590);background:transparent;color:var(--ink-2,#b4bbdd);font:600 14px Barlow,system-ui,sans-serif;cursor:pointer;transition:color 150ms}.ds-chip:hover{color:var(--ink,#f1f2fa)}.ds-chip i{width:8px;height:8px;border-radius:2px}.ds-chip-n{font-variant-numeric:tabular-nums;color:var(--ink-3,#8a92c0)}.ds-chip.is-on{background:var(--cream,#f7e6b5);border-color:var(--cream,#f7e6b5);color:var(--night,#0a0f2c)}.ds-chip.is-on .ds-chip-n{color:rgba(10,15,44,0.7)}.ds-chip:focus-visible{outline:2px solid var(--cream,#f7e6b5);outline-offset:2px}"
+    },
+    {
+      "name": "Team Key",
+      "kind": "custom",
+      "refersTo": "team-key",
+      "description": "Sale panel radio row: numbered key (keyboard 1–7), team in display caps, max bid in cream; selected goes floodlight.",
+      "html": "<div class=\"ds-keys\" role=\"radiogroup\"><button class=\"ds-key\" role=\"radio\" aria-checked=\"false\"><b>1</b><span>Gujarat Lions</span><em>up to <s>₹59 L</s></em></button><button class=\"ds-key\" role=\"radio\" aria-checked=\"true\"><b>2</b><span>Chhava Sena</span><em>up to <s>₹74 L</s></em></button><button class=\"ds-key\" role=\"radio\" aria-checked=\"false\" disabled><b>3</b><span>Team Lagaan</span><em>Gold full</em></button></div>",
+      "css": ".ds-keys{display:grid;gap:4px;width:400px}.ds-key{display:flex;align-items:center;gap:12px;min-height:40px;padding:0 12px;border:1px solid var(--rule-strong,#3a4590);border-radius:4px;background:var(--night,#0a0f2c);text-align:left;cursor:pointer;transition:border-color 150ms,background-color 150ms}.ds-key:hover{border-color:var(--ink-3,#8a92c0)}.ds-key b{display:flex;width:24px;height:24px;align-items:center;justify-content:center;border-radius:3px;background:var(--night-3,#18215a);color:var(--ink-2,#b4bbdd);font:700 14px 'Big Shoulders Display',sans-serif}.ds-key span{flex:1;font:700 15px 'Big Shoulders Display',sans-serif;text-transform:uppercase;letter-spacing:0.025em;color:var(--ink,#f1f2fa)}.ds-key em{font:normal 600 14px Barlow,sans-serif;font-variant-numeric:tabular-nums;color:var(--ink-2,#b4bbdd)}.ds-key s{text-decoration:none;color:var(--cream,#f7e6b5)}.ds-key[aria-checked=true]{border-color:var(--floodlight,#e8317f);background:rgba(232,49,127,0.15)}.ds-key[aria-checked=true] b{background:var(--floodlight,#e8317f);color:#fff}.ds-key:disabled{cursor:not-allowed;border-color:var(--rule,#252e66);background:transparent}.ds-key:disabled span,.ds-key:disabled em{color:var(--ink-3,#8a92c0)}.ds-key:focus-visible{outline:2px solid var(--cream,#f7e6b5);outline-offset:2px}"
+    },
+    {
+      "name": "Squad Ledger",
+      "kind": "custom",
+      "refersTo": "ledger-sheet",
+      "description": "Ruled 13-line grid: shoulder of category labels, one column per team, washed entries with scorebook names and cream amounts, dashed open places; the fresh entry plays ink-settle.",
+      "html": "<div class=\"ds-ledger\" role=\"table\"><div class=\"ds-lh\">Squad</div><div class=\"ds-th\"><span>Gujarat Lions</span><em><s>₹1.34 Cr</s> 2/13</em></div><div class=\"ds-th\"><span>Team Lagaan</span><em><s>₹1.22 Cr</s> 4/13</em></div><div class=\"ds-rh\"><i style=\"background:#f5c542\"></i>Gold</div><div class=\"ds-cell\" style=\"background:rgba(245,197,66,0.15)\"><span>A. Shetty<span class=\"ds-sr\">Anil Shetty</span></span><s>₹36 L</s></div><div class=\"ds-cell is-settle\" style=\"--settle-from:rgba(232,49,127,0.55);--settle-to:rgba(245,197,66,0.15)\"><span>D. Chaudhari</span><s>₹42 L</s></div><div class=\"ds-rh\"><span class=\"ds-sr\">Gold</span></div><div class=\"ds-cell\"><i class=\"ds-open\" style=\"border-color:#f5c542\"></i></div><div class=\"ds-cell\"></div></div>",
+      "css": ".ds-ledger{display:grid;grid-template-columns:6.5rem repeat(2,minmax(0,12rem));overflow:hidden;border:1px solid var(--rule-strong,#3a4590);border-radius:6px;background:var(--night-2,#10173d);font-family:Barlow,system-ui,sans-serif}.ds-lh{display:flex;align-items:flex-end;padding:0 12px 12px;border-bottom:1px solid var(--rule-strong,#3a4590);font:700 12px 'Big Shoulders Display',sans-serif;text-transform:uppercase;letter-spacing:0.12em;color:var(--ink-3,#8a92c0)}.ds-th{display:flex;flex-direction:column;justify-content:space-between;gap:8px;min-height:7.25rem;padding:12px;border-bottom:1px solid var(--rule-strong,#3a4590);border-left:1px solid var(--rule-strong,#3a4590);background:rgba(24,33,90,0.6)}.ds-th span{font:800 17px/0.95 'Big Shoulders Display',sans-serif;text-transform:uppercase;letter-spacing:0.025em;color:var(--ink,#f1f2fa)}.ds-th em{display:flex;justify-content:space-between;font-style:normal;font-size:14px;font-variant-numeric:tabular-nums;color:var(--ink-2,#b4bbdd)}.ds-th s,.ds-cell s{text-decoration:none;font-weight:600;color:var(--cream,#f7e6b5);font-variant-numeric:tabular-nums}.ds-rh{display:flex;align-items:center;gap:8px;height:44px;padding:0 12px;border-bottom:1px solid var(--rule,#252e66);font:700 13px 'Big Shoulders Display',sans-serif;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-2,#b4bbdd)}.ds-rh i{width:10px;height:10px;border-radius:2px}.ds-cell{display:flex;flex-direction:column;justify-content:center;height:44px;padding:0 10px;border-bottom:1px solid var(--rule,#252e66);border-left:1px solid var(--rule,#252e66);line-height:1.25}.ds-cell span{font:600 14px 'Barlow Condensed',Barlow,sans-serif;color:var(--ink,#f1f2fa)}.ds-cell s{font-size:12px}.ds-open{display:block;height:60%;border:1px dashed;border-radius:3px;opacity:.55}.ds-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}.ds-cell.is-settle{animation:ds-ink-settle 3s cubic-bezier(0.33,1,0.68,1) both}@keyframes ds-ink-settle{0%,30%{background-color:var(--settle-from)}100%{background-color:var(--settle-to)}}"
+    },
+    {
+      "name": "SOLD Stamp",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Stage takeover signature: ball-red rubber stamp landing at -8deg over the name, team on the swallowtail banner, amount in cream; holds 6s.",
+      "html": "<div class=\"ds-sold\"><div class=\"ds-sold-name\">Dr Dattatraya Chaudhari<span class=\"ds-stamp\">Sold</span></div><p class=\"ds-sold-to\">to</p><p class=\"ds-banner\">Shree Siddhivinayak Strikers</p><p class=\"ds-sold-amt\">₹42 L</p></div>",
+      "css": ".ds-sold{position:relative;padding:48px 32px;background:var(--night,#0a0f2c) radial-gradient(50% 60% at 50% 40%,rgba(224,49,58,0.22),transparent 70%);font-family:'Big Shoulders Display',sans-serif;text-transform:uppercase;color:var(--ink,#f1f2fa)}.ds-sold-name{position:relative;font-weight:900;font-size:40px;line-height:.9}.ds-stamp{position:absolute;right:0;top:-40px;padding:2px 20px;border:5px solid var(--ball,#e0313a);border-radius:6px;box-shadow:inset 0 0 0 3px rgba(224,49,58,0.35);color:var(--ball,#e0313a);font-weight:900;font-size:72px;line-height:1;letter-spacing:0.06em;animation:ds-stamp-in 520ms cubic-bezier(0.16,1,0.3,1) both}.ds-sold-to{margin:28px 0 0;font-weight:700;font-size:22px;letter-spacing:0.16em;color:var(--ink-2,#b4bbdd)}.ds-banner{display:inline-block;margin:8px 0 0;padding:12px 40px 12px 28px;background:var(--night-3,#18215a);clip-path:polygon(0 0,100% 0,calc(100% - 0.35em) 50%,100% 100%,0 100%);box-shadow:inset 0 -4px 0 rgba(232,49,127,0.55);font-weight:900;font-size:56px;line-height:.88}.ds-sold-amt{margin:20px 0 0;font-weight:900;font-size:96px;line-height:1;font-variant-numeric:tabular-nums;color:var(--cream,#f7e6b5)}@keyframes ds-stamp-in{0%{opacity:0;transform:scale(1.9) rotate(-14deg);filter:blur(6px)}60%{opacity:1;transform:scale(.94) rotate(-8deg);filter:blur(0)}100%{opacity:1;transform:scale(1) rotate(-8deg)}}@media (prefers-reduced-motion:reduce){.ds-stamp{animation-duration:1ms}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Scorer's Ledger",
+    "overview": "The auction is a scorer's book written under floodlights. Every team is a ruled column of thirteen lines, and every sale is one inked entry in it. The ground is the night sky from the SCL logo: deep navy panels, hairline rules, and a magenta floodlight glow that only ever comes from the top edge. Nothing floats. Panels are ruled sheets with hairline borders, not lifted cards, and density comes from the grid, not from decoration.\n\nTwo reading distances govern every choice. The console is read at laptop distance by one operator working fast. The stage is read from the back of a hall, often through a washed-out projector, so names, team names, and money are set in a tall condensed display face at viewport-relative sizes. Colour carries meaning, never ornament. The five category inks name the squad places, cream marks money, and ball red marks a sale or a destructive action. Each one always comes with a written word.\n\nThe system rejects the generic admin-card grid and the glossy broadcast package of gradient panels. It borrows its signature from the scorebook and the rubber stamp: the SOLD stamp lands, holds, and the entry then settles into its column.",
+    "keyCharacteristics": [
+      "Night-navy ground with three panel steps and two hairline rule weights",
+      "Top-edge floodlight glow (magenta into violet), never behind content",
+      "Tall condensed display caps for names, teams, and big numerals; Barlow for UI; Barlow Condensed for ledger entries",
+      "Category inks always paired with their written label",
+      "Cream reserved for money; ball red reserved for SOLD and destructive/error states",
+      "Ruled 13-line ledger grid on desktop, a single ruled stack on phones"
+    ],
+    "rules": [
+      {
+        "name": "The Labelled Ink Rule",
+        "body": "A category colour never appears without its written name (Legend, Youngstar, Gold, Silver, Bronze) somewhere in the same row or tag. In ledger rows where the label is shown only once per group, the other rows carry it as screen-reader text.",
+        "section": "colors"
+      },
+      {
+        "name": "The Cream Is Money Rule",
+        "body": "If a number is a rupee amount, it is cream. Counts (2/13, 18 sold) are ink or muted ink, never cream.",
+        "section": "colors"
+      },
+      {
+        "name": "The Red Means Gone Rule",
+        "body": "Ball red marks a sale or something destructive or broken. It never decorates, and it never identifies a category or a team. The ledger's settle flash uses floodlight magenta, not red.",
+        "section": "colors"
+      },
+      {
+        "name": "The Scorebook Name Rule",
+        "body": "In tight ledger cells a player is written the way a scorer writes them: initial and surname (\"D. Chaudhari\", with the \"Dr\" title dropped). The full title-cased name stays in the cell as screen-reader text and in the `title` attribute. Wider layouts (the phone stack, the pool list, the stage) use the full name.",
+        "section": "typography"
+      },
+      {
+        "name": "The Shout In Caps Rule",
+        "body": "Big Shoulders is always uppercase, and Barlow is always sentence case. Running text title-cases stored upper-case names (\"Khalsa Warriors\").",
+        "section": "typography"
+      },
+      {
+        "name": "The Ruled Sheet Rule",
+        "body": "Group content into ruled sheets (a strong-rule outer border, hairline inner rules), not into separate cards with gaps between them. Adjacent cells share a border.",
+        "section": "layout"
+      },
+      {
+        "name": "The Floodlight From Above Rule",
+        "body": "Atmospheric glow is a radial gradient anchored above the top edge (magenta at 22–32% fading into violet). It never sits behind body content, and it never becomes a panel fill. The SOLD takeover is the one exception: its glow is a centred ball-red radial at 22%.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do set every rupee amount in cream with tabular figures, formatted in Indian units (₹42 L, ₹1.25 Cr, with no trailing \".0\").",
+      "Do pair every category ink with its written label, using a solid tag, a 10px swatch plus the label, or screen-reader text for repeated rows.",
+      "Do build regions as ruled sheets (a strong-rule outer border and hairline inner rules on night-2) that share borders between cells.",
+      "Do size stage type in vw/vh clamps so names and money read from the back of a hall.",
+      "Do write names in tight ledger cells as scorebook names (\"D. Chaudhari\") and keep the full name for assistive tech.",
+      "Do keep the cream focus outline (2px, 2px offset) on every interactive element. Motion collapses to 1ms under `prefers-reduced-motion`.",
+      "Do read season, league, and team values from season data, never from hard-coded copy."
+    ],
+    "donts": [
+      "Don't use ball red for anything but SOLD, destructive actions, and error or offline states.",
+      "Don't use cream for counts, labels, or decoration. It means money.",
+      "Don't float content in separate shadowed cards with gaps between them, and don't fill panels with gradients. The glow belongs to the top edge.",
+      "Don't set Barlow in tracked uppercase as display type, or set Big Shoulders in sentence case.",
+      "Don't show the bidding war, lot numbers, or \"players remaining\" counters on any surface. The screen records results, not the bidding."
+    ]
+  }
+}
