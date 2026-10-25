@@ -22,7 +22,7 @@ A purpose-built tool for one community league's auction format. The rules are en
 
 ## Operating Context
 
-- Used live, in person, on auction day (the 2027 event is 17 Jan 2027). One admin operates while the screen is projected to a room. Others watch on their phones through the public link.
+- Used live, in person, on auction day (the auction date is still to be set; Season 7 matches are on 17 Jan 2027). One admin operates while the screen is projected to a room. Others watch on their phones through the public link.
 - Reused every season. Teams, team names, purse, categories, limits, and minimum bids may change from one season to the next, so treat the current values as season data rather than permanent fixtures.
 - Players are society residents and are identified by wing and flat number, playing role, age, and photo.
 

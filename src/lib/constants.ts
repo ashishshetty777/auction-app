@@ -6,9 +6,10 @@ export const SEASON = {
   short: "SCL",
   season: 7,
   year: 2027,
-  auctionDate: "17 Jan 2027",
-  // ISO auction day; ages on the registration form are worked out as of this date
-  auctionDay: "2027-01-17",
+  // Match day. The auction is held separately, on a date still to be set.
+  eventDate: "17 Jan 2027",
+  // ISO match day; ages on the registration form are worked out as of this date
+  eventDay: "2027-01-17",
   // As printed on the season emblem
   emblemDate: "17th Jan, 2027",
 };

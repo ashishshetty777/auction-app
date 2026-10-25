@@ -112,7 +112,7 @@ export function nameKey(value: string): string {
     .trim();
 }
 
-export function ageOn(dobIso: string, onIso: string = SEASON.auctionDay): number {
+export function ageOn(dobIso: string, onIso: string = SEASON.eventDay): number {
   const dob = new Date(`${dobIso}T00:00:00`);
   const on = new Date(`${onIso}T00:00:00`);
   let age = on.getFullYear() - dob.getFullYear();
@@ -150,7 +150,7 @@ export function validateRegistration(input: RegistrationInput): RegistrationErro
   } else {
     const age = ageOn(input.dateOfBirth);
     if (age < REGISTRATION.minAge || age > REGISTRATION.maxAge) {
-      e.dateOfBirth = `Check the year: that makes you ${age} on auction day.`;
+      e.dateOfBirth = `Check the year: that makes you ${age} on match day.`;
     }
   }
 

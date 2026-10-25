@@ -72,7 +72,7 @@ export default function RegisterPage() {
           Player registration
         </h1>
         <p className="mt-3 font-display text-lg font-bold uppercase tracking-[0.14em] text-cream">
-          {SEASON.short} Season {SEASON.season} · Auction {SEASON.auctionDate}
+          {SEASON.short} Season {SEASON.season} · Matches {SEASON.eventDate}
         </p>
 
         {!ready ? null : !passcode ? (
@@ -313,7 +313,7 @@ function RegistrationForm({
             id="r-dob"
             label="Date of birth"
             error={err('dateOfBirth')}
-            hint={age !== null && age > 0 ? `You’ll be ${age} on auction day.` : undefined}
+            hint={age !== null && age > 0 ? `You’ll be ${age} on match day.` : undefined}
           >
             <DateOfBirthSelect
               id="r-dob"
@@ -747,7 +747,7 @@ function Registered({
       </div>
       <p className="mt-6 text-[15px] text-ink-2">
         The organisers will review it and add you to the auction pool. The {FEE} fee
-        is due only once your selection is confirmed. See you on {SEASON.auctionDate}.
+        is due only once your selection is confirmed. See you on the field on {SEASON.eventDate}.
       </p>
       <div className="mt-6 flex flex-wrap gap-3">
         <Button onClick={onAnother}>Register another player</Button>
