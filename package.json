@@ -12,6 +12,7 @@
     "@vercel/blob": "^2.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "heic2any": "^0.0.4",
     "lucide-react": "^0.454.0",
     "mongoose": "^9.0.1",
     "next": "15.0.7",

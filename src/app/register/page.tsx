@@ -10,6 +10,7 @@ import { Select } from '@/components/ui/select';
 import { DateOfBirthSelect } from '@/components/ui/date-of-birth';
 import { REGISTRATION, SEASON, SOCIETY } from '@/lib/constants';
 import { cn, titleCase } from '@/lib/utils';
+import { toJpeg } from '@/lib/photo';
 import {
   BOWLING_LABEL,
   EMPTY_REGISTRATION,
@@ -570,27 +571,6 @@ function Choice({
   );
 }
 
-const PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
-
-/**
- * Re-encodes the photo as a JPEG of at most 1200px, so phone photos stay well
- * under the server's size limit. Returns null when the browser can't read it
- * as a photo (an SVG, a PDF renamed .jpg, an unsupported HEIC).
- */
-async function toJpeg(file: File): Promise<Blob | null> {
-  try {
-    const bitmap = await createImageBitmap(file);
-    const scale = Math.min(1, 1200 / Math.max(bitmap.width, bitmap.height));
-    const canvas = document.createElement('canvas');
-    canvas.width = Math.round(bitmap.width * scale);
-    canvas.height = Math.round(bitmap.height * scale);
-    canvas.getContext('2d')!.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-    return await new Promise<Blob | null>(r => canvas.toBlob(r, 'image/jpeg', 0.85));
-  } catch {
-    return null;
-  }
-}
-
 function PhotoField({
   name,
   value,
@@ -610,7 +590,8 @@ function PhotoField({
     const file = e.target.files?.[0];
     e.target.value = '';
     if (!file) return;
-    if (!PHOTO_TYPES.includes(file.type)) {
+    // Some Android pickers send no type; let the decoder decide those.
+    if (file.type && !file.type.startsWith('image/')) {
       setUploadError('Choose a photo from your camera or gallery (JPG or PNG).');
       return;
     }
@@ -666,7 +647,7 @@ function PhotoField({
           <p className="text-sm text-ink-3">
             A clear face photo, shoulders up. It’s shown on the big screen when you’re called.
           </p>
-          <input ref={inputRef} type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" onChange={pick} className="sr-only" aria-labelledby="photo-label" tabIndex={-1} />
+          <input ref={inputRef} type="file" accept="image/*,.heic,.heif" onChange={pick} className="sr-only" aria-labelledby="photo-label" tabIndex={-1} />
           <Button className="mt-3" onClick={() => inputRef.current?.click()} disabled={uploading}>
             {value ? <RotateCcw /> : <Camera />}
             {value ? 'Change photo' : 'Add photo'}
