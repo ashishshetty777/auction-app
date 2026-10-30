@@ -6,6 +6,7 @@ import { useEditAuth } from '@/providers/EditAuthProvider';
 import { cn, formatMoney, sortPlayersByName, titleCase } from '@/lib/utils';
 import { CATEGORY_META, CATEGORY_ORDER, REGISTRATION, SEASON } from '@/lib/constants';
 import { ageOn, toStoredDate } from '@/lib/registration';
+import { toJpeg } from '@/lib/photo';
 import { DateOfBirthSelect } from '@/components/ui/date-of-birth';
 import { AppShell } from '@/components/AppShell';
 import { PlayerPhoto } from '@/components/PlayerPhoto';
@@ -119,14 +120,23 @@ export default function PlayersPage() {
     setIsUploading(true);
     const file = e.target.files[0];
 
+    e.target.value = '';
+
     try {
-      const response = await fetch(
-        `/api/blob?filename=${encodeURIComponent(file.name)}`,
-        {
-          method: 'POST',
-          body: file,
-        }
-      );
+      const body = await toJpeg(file);
+      if (!body) {
+        toast({
+          tone: 'error',
+          title: 'Photo couldn’t be read',
+          detail: 'Pick a JPG or PNG, or take a screenshot of the photo.',
+        });
+        return;
+      }
+      const slug = editingPlayer.name.trim().replace(/[^\w]+/g, '-').toLowerCase() || 'player';
+      const response = await fetch(`/api/blob?filename=${encodeURIComponent(`${slug}.jpg`)}`, {
+        method: 'POST',
+        body,
+      });
       const newBlob = await response.json();
 
       if (newBlob.url) {
@@ -509,11 +519,11 @@ export default function PlayersPage() {
                     </>
                   ) : (
                     <>
-                      <p className="mt-1 text-sm text-ink-3">A portrait JPG or PNG works best.</p>
+                      <p className="mt-1 text-sm text-ink-3">A portrait photo works best.</p>
                       <div className="mt-3 flex items-center gap-2">
                         <Input
                           type="file"
-                          accept="image/*"
+                          accept="image/*,.heic,.heif"
                           aria-label="Upload photo"
                           onChange={handleImageUpload}
                           disabled={isUploading}
